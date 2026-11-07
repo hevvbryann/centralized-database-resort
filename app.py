@@ -1,12 +1,19 @@
 import os
 import secrets
 import sys
+import time
 from flask import Flask, render_template, session
 from flask_mail import Mail
 from dotenv import load_dotenv
 from config import DatabaseError, MySQLDatabaseError
 
 load_dotenv()
+
+# Existing booking/OTP timestamps use Philippine local time.
+if os.getenv("VERCEL"):
+    os.environ["TZ"] = "Asia/Manila"
+    if hasattr(time, "tzset"):
+        time.tzset()
 
 
 app = Flask(__name__)
@@ -59,8 +66,8 @@ if __name__ == "__main__":
 # ROUTES
 # ============================
 
-import routes.public.home
-import routes.public.resorts
+import routes.sitepages.home
+import routes.sitepages.resorts
 import routes.auth.registration
 import routes.auth.otp
 import routes.auth.login
@@ -83,3 +90,4 @@ if __name__ == "__main__":
         debug=os.getenv("FLASK_DEBUG", "0") == "1",
         port=int(os.getenv("PORT", "5001")),
     )
+
