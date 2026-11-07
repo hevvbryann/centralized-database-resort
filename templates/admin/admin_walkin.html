@@ -28,6 +28,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="owner-ui">
 <div class="app">{% include 'admin/_sidebar.html' %}<div class="main">{% include 'admin/_header.html' %}<div class="wrap content">
@@ -56,7 +58,7 @@
         <td>
           {% if w.proof_of_payment %}
           <a href="{{ w.proof_url }}" target="_blank" rel="noopener">
-            <img src="{{ w.proof_url }}" alt="Proof" style="width:90px;height:64px;object-fit:cover;border-radius:6px;">
+            <img src="{{ w.proof_url }}" alt="Proof" style="width:90px;height:64px;object-fit:cover;border-radius:6px;" decoding="async" loading="lazy">
           </a>
           {% else %}No photo{% endif %}
         </td>

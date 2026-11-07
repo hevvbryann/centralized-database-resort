@@ -114,7 +114,7 @@
         {% set hero_photo = resort.photos[0].url if resort.photos else resort.logo %}
         <article class="resort-hero-slide{{ ' is-active' if loop.first else '' }}" data-resort-slide aria-hidden="{{ 'false' if loop.first else 'true' }}">
             <img src="{{ hero_photo or url_for('static', filename='images/default-resort.svg') }}"
-                 alt="{{ resort.resort_name }} resort" {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+                 alt="{{ resort.resort_name }} resort" {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
             <div class="resort-hero-copy">
                 <p class="resort-kicker">Registered resort · {{ resort.address or 'Pansol, Laguna' }}</p>
                 <h1>{{ resort.resort_name }}</h1>
@@ -167,7 +167,7 @@
             src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}"
             alt="{{ resort.resort_name }} photo"
             loading="lazy"
-        >
+         decoding="async">
         <div class="card-content">
             <h3>{{ resort.resort_name }}</h3>
             {% if resort.status != 'Active' %}
@@ -488,9 +488,10 @@ if (resortSlides.length > 1) {
         });
         resortDots.forEach((dot, dotIndex) => dot.setAttribute("aria-current", String(dotIndex === activeResortSlide)));
     };
+    let resortHeroVisible = true;
     const startResortCarousel = () => {
         window.clearInterval(resortCarouselTimer);
-        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (!document.hidden && resortHeroVisible && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
             resortCarouselTimer = window.setInterval(() => showResortSlide(activeResortSlide + 1), 6000);
         }
     };
@@ -511,6 +512,12 @@ if (resortSlides.length > 1) {
     resortHero.addEventListener("mouseleave", startResortCarousel);
     resortHero.addEventListener("focusin", () => window.clearInterval(resortCarouselTimer));
     resortHero.addEventListener("focusout", startResortCarousel);
+    new IntersectionObserver(entries => {
+        resortHeroVisible = entries[0].isIntersecting;
+        startResortCarousel();
+    }).observe(resortHero);
+    document.addEventListener('visibilitychange', startResortCarousel);
+    window.addEventListener('pagehide', () => window.clearInterval(resortCarouselTimer));
     startResortCarousel();
 }
 

@@ -31,7 +31,7 @@ body{
 .left{
     flex:1;
     position:relative;
-    background:url("../images/rightpanel.png") center center/cover no-repeat;
+    background:url("../images/rightpanel.webp") center center/cover no-repeat;
 }
 
 .overlay{

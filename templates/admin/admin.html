@@ -92,6 +92,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="owner-ui">
 
@@ -240,7 +242,7 @@
         <div class="my-resort-grid">
           {% for r in resorts | default([]) %}
           <article class="my-resort-card">
-            <div class="my-resort-image"><img src="{{ r.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ r.resort_name }}"></div>
+            <div class="my-resort-image"><img src="{{ r.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ r.resort_name }}" decoding="async"></div>
             <div class="my-resort-body">
               <div class="my-resort-title"><h4>{{ r.resort_name }}</h4><span class="pill {{ 'pill-active' if r.status == 'Active' else 'pill-cancelled' }}">{{ r.status }}</span></div>
               <p>{{ r.address or 'Location details have not been added.' }}</p>

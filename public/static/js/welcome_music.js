@@ -12,7 +12,7 @@
 
   const audio = document.createElement('audio');
   audio.loop = true;
-  audio.preload = 'auto';
+  audio.preload = shouldResumeMusic ? 'metadata' : 'none';
   audio.autoplay = shouldResumeMusic;
   const savedVolume = Number(localStorage.getItem('welcomeMusicVolume'));
   audio.volume = Number.isFinite(savedVolume) ? Math.max(0, Math.min(.5, savedVolume)) : .22;

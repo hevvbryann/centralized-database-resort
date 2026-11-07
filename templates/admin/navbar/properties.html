@@ -25,6 +25,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="owner-ui">
 
@@ -119,7 +121,7 @@
              data-property-amenities="{{ property.amenities|default('', true) }}"
              data-property-description="{{ property.description|default('', true) }}">
           <div class="property-img">
-            <img src="{{ property.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ property.resort_name }}">
+            <img src="{{ property.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ property.resort_name }}" decoding="async">
           </div>
           <div class="property-body">
             <h4>{{ property.resort_name }}</h4>

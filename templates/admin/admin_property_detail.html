@@ -183,6 +183,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 
 <body class="owner-ui">
@@ -225,7 +227,7 @@
       </div>
 
       <div class="resort-hero">
-        <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }} photo">
+        <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }} photo" decoding="async">
         <div class="resort-hero-copy">
           <h3>About this resort</h3>
           <p>{{ resort.description or 'No description available for this resort yet.' }}</p>
@@ -242,7 +244,7 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">
           {% for photo in photos %}
           <figure style="position:relative;margin:0;">
-            <img src="{{ photo.url }}" alt="{{ photo.caption or resort.resort_name }}" style="width:100%;height:110px;object-fit:cover;border-radius:8px;">
+            <img src="{{ photo.url }}" alt="{{ photo.caption or resort.resort_name }}" style="width:100%;height:110px;object-fit:cover;border-radius:8px;" decoding="async" loading="lazy">
             {% if photo.caption %}<figcaption class="muted" style="font-size:12px;margin-top:4px;">{{ photo.caption }}</figcaption>{% endif %}
             <form method="post" action="{{ url_for('admin_resort_photo_delete', resort_id=resort.resort_id, photo_id=photo.photo_id) }}" data-confirm="Delete this resort photo? It will also disappear from the customer gallery." style="margin-top:6px;">
               <button class="btn btn-sm" type="submit" style="background:#a12a2a;color:#fff;border:0;">Delete photo</button>
@@ -719,7 +721,7 @@ function showBookings() {
     // proof picture (or a dash if there is none)
     var proofHtml = '\u2014';
     if (b.proof) {
-      proofHtml = '<a href="' + safeText(b.proof) + '" target="_blank"><img class="thumb" src="' + safeText(b.proof) + '"></a>';
+      proofHtml = '<a href="' + safeText(b.proof) + '" target="_blank"><img class="thumb" src="' + safeText(b.proof) + '" decoding="async" loading="lazy"></a>';
     }
 
     // one table row
@@ -822,7 +824,7 @@ function showUpdates() {
     html += '<div class="upd">';
     html += '  <b>' + safeText(u.title) + '</b><br>';
     html += safeText(u.message) + '<br>';
-    if (u.image_url) html += '<img src="' + safeText(u.image_url) + '" alt="Update picture" style="display:block;max-width:100%;max-height:220px;margin:10px 0;border-radius:8px">';
+    if (u.image_url) html += '<img src="' + safeText(u.image_url) + '" alt="Update picture" style="display:block;max-width:100%;max-height:220px;margin:10px 0;border-radius:8px" decoding="async" loading="lazy">';
     html += '<span class="muted">' + safeText(u.scope || '') + '</span><br>';
     html += '  <span class="muted">' + safeText(u.date) + '</span>';
     html += '</div>';

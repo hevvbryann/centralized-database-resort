@@ -11,17 +11,19 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
 <div class="layout">
   <aside class="sidebar">
-    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a></div>
     {% include 'customer/_sidebar_nav.html' %}
     <a class="logout" href="{{ url_for('logout') }}">Log out</a>
   </aside>
   <div class="main">
     <header class="topbar">
-      <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a>
+      <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a>
       <nav class="topbar-links">
         <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
         <a href="{{ url_for('resorts') }}">Resorts</a>
@@ -40,7 +42,7 @@
         {% for resort in resorts %}
         <article class="customer-resort-card">
           <a class="customer-resort-image" href="{{ url_for('resorts') }}" aria-label="Explore {{ resort.resort_name }}">
-            <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}">
+            <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}" decoding="async">
           </a>
           <div class="customer-resort-body">
             <p class="customer-resort-location"><i class="fa-solid fa-location-dot"></i> {{ resort.address or 'Pansol, Calamba, Laguna' }}</p>

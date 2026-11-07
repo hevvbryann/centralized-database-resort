@@ -1,5 +1,5 @@
 <div class="sidebar">
-  <div class="brand"><a class="brand-destination" href="{{ url_for('dashboard') }}" aria-label="Dashboard"><img class="brand-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+  <div class="brand"><a class="brand-destination" href="{{ url_for('dashboard') }}" aria-label="Dashboard"><img class="brand-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a></div>
   <nav class="side-nav" aria-label="Owner navigation">
     {% for endpoint,label,icon,active in [
       ('dashboard','Dashboard','grip',request.endpoint in ['dashboard','admin_dashboard']),

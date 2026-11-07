@@ -35,6 +35,8 @@
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
 <script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="caretaker-ui">
 
@@ -140,7 +142,7 @@
         <label for="proof">Photo (proof of payment) *</label>
         <input type="file" id="proof" name="proof" accept="image/png,image/jpeg,image/webp" required>
         <div class="hint">JPG, PNG or WEBP, up to 5 MB. The admin reviews this photo and the amount.</div>
-        <img id="proofPreview" class="proof-preview" alt="Photo preview">
+        <img id="proofPreview" class="proof-preview" alt="Photo preview" decoding="async" loading="lazy">
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-outline" onclick="document.getElementById('walkinModal').classList.remove('open')">Cancel</button>

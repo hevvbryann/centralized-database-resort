@@ -23,6 +23,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="owner-ui owner-settings">
 
@@ -74,7 +76,7 @@
           <section class="settings-panel active" data-settings-panel="account">
             <h3>Account Details</h3>
             <form method="post" action="{{ url_for('settings') }}" enctype="multipart/form-data">
-              <div class="form-row"><label for="profile_picture">Profile Photo</label>{% if profile_photo %}<img src="{{ profile_photo }}" alt="Current profile photo" style="width:88px;height:88px;display:block;object-fit:cover;border-radius:50%;margin:8px 0 12px;">{% endif %}<input id="profile_picture" name="profile_picture" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"><span class="settings-muted">JPG, PNG, or WEBP · up to 5 MB</span></div>
+              <div class="form-row"><label for="profile_picture">Profile Photo</label>{% if profile_photo %}<img src="{{ profile_photo }}" alt="Current profile photo" style="width:88px;height:88px;display:block;object-fit:cover;border-radius:50%;margin:8px 0 12px;" decoding="async">{% endif %}<input id="profile_picture" name="profile_picture" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"><span class="settings-muted">JPG, PNG, or WEBP · up to 5 MB</span></div>
               <div class="form-cols">
                 <div class="form-row"><label for="fullname">Full Name</label><input id="fullname" name="fullname" value="{{ account.fullname }}" required maxlength="150"></div>
                 <div class="form-row"><label for="email">Email</label><input id="email" name="email" type="email" value="{{ account.email }}" required maxlength="150"></div>

@@ -1,5 +1,5 @@
 <div class="topnav owner-topnav">
-  <a class="owner-header-brand" href="{{ url_for('dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a>
+  <a class="owner-header-brand" href="{{ url_for('dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a>
   <div class="topnav-links">
     <a class="topnav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
     <a class="topnav-link" href="{{ url_for('booking') }}">Booking</a>
@@ -10,7 +10,7 @@
     <a class="notification-destination" href="{{ url_for('settings', _anchor='notifications') }}" aria-label="Notifications" title="Notifications"><i class="fa-regular fa-bell" aria-hidden="true"></i></a>
     <a class="profile profile-destination" href="{{ url_for('settings') }}" aria-label="Profile settings" title="Profile settings">
       {% set owner_photo = profile_photo|default(session.get('profile_photo'),true) %}
-      {% if owner_photo %}<img class="avatar" src="{{ owner_photo }}" alt="" width="32" height="32">{% else %}<span class="avatar" aria-hidden="true">{{ session.get('fullname','O')[:1]|upper }}</span>{% endif %}
+      {% if owner_photo %}<img class="avatar" src="{{ owner_photo }}" alt="" width="32" height="32" decoding="async" loading="lazy">{% else %}<span class="avatar" aria-hidden="true">{{ session.get('fullname','O')[:1]|upper }}</span>{% endif %}
       <span class="owner-profile-name">{{ username|default(session.get('fullname','Owner'),true) }}</span>
     </a>
   </div>

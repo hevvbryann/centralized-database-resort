@@ -23,6 +23,8 @@
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
 <script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="caretaker-ui">
 
@@ -77,7 +79,7 @@
             <label for="proof">Photo (proof of payment) *</label>
             <input type="file" id="proof" name="proof" accept="image/png,image/jpeg,image/webp" required>
             <div class="hint">JPG, PNG or WEBP, up to 5 MB.</div>
-            <img id="proofPreview" class="proof-preview" alt="Photo preview">
+            <img id="proofPreview" class="proof-preview" alt="Photo preview" decoding="async" loading="lazy">
           </div>
         </div>
         <div class="modal-actions" style="margin-top:16px;">
@@ -104,7 +106,7 @@
               <td>
                 {% if w.proof_of_payment %}
                 <a href="{{ w.proof_url }}" target="_blank" rel="noopener">
-                  <img src="{{ w.proof_url }}" alt="Proof" style="width:56px;height:40px;object-fit:cover;border-radius:6px;">
+                  <img src="{{ w.proof_url }}" alt="Proof" style="width:56px;height:40px;object-fit:cover;border-radius:6px;" decoding="async" loading="lazy">
                 </a>
                 {% endif %}
               </td>

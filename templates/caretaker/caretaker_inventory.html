@@ -14,6 +14,8 @@
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
 <script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="caretaker-ui">
 
@@ -86,7 +88,7 @@ function render() {
       <td>${esc(r.payment_status || 'No payment')}${r.amount != null ? '<br>&#8369;' + r.amount.toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</td>
       <td>${esc(r.payer_name || 'Sender not provided')}<br><small>${esc(r.payer_phone || 'Phone not provided')} · Ref: ${esc(r.reference_number || 'Not provided')}</small></td>
       <td>${esc(r.customer_decision || 'Pending')}</td>
-      <td>${r.proof ? `<a href="${esc(r.proof)}" target="_blank"><img src="${esc(r.proof)}" alt="Proof" style="width:56px;height:40px;object-fit:cover;border-radius:6px;"></a>` : 'No proof'}</td>
+      <td>${r.proof ? `<a href="${esc(r.proof)}" target="_blank"><img src="${esc(r.proof)}" alt="Proof" style="width:56px;height:40px;object-fit:cover;border-radius:6px;" decoding="async" loading="lazy"></a>` : 'No proof'}</td>
       <td>${esc(r.status)}</td>
       <td>${r.can_review ? `
         <form method="post" action="${REVIEW_URL.replace('/0/', '/' + r.id + '/')}" style="display:flex;gap:6px;">

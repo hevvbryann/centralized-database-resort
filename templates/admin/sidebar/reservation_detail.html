@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="owner-ui">
   <div class="app">
@@ -41,7 +43,7 @@
           <hr style="margin:22px 0; border:0; border-top:1px solid #ddd;">
           <h3>Payment proof</h3>
           {% if reservation.proof_of_payment %}
-            <p><img src="{{ reservation.proof_url }}" alt="Payment proof" style="max-width:100%; max-height:560px; border:1px solid #ddd; border-radius:8px;"></p>
+            <p><img src="{{ reservation.proof_url }}" alt="Payment proof" style="max-width:100%; max-height:560px; border:1px solid #ddd; border-radius:8px;" decoding="async" loading="lazy"></p>
             <a class="btn btn-outline btn-sm" target="_blank" rel="noopener" href="{{ reservation.proof_url }}">Open full image</a>
           {% else %}
             <p class="page-sub">The customer has not submitted a payment screenshot.</p>

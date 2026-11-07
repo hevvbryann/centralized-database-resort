@@ -20,11 +20,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
 <header>
   <div class="logo">
-    <img class="brand-image" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143">
+    <img class="brand-image" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143" decoding="async">
   </div>
   <nav>
     <a href="{{ url_for('index') }}">Home</a>
@@ -54,7 +56,7 @@
   {% for resort in resorts %}
   <article class="resort-card" data-search="{{ (resort.resort_name ~ ' ' ~ (resort.address or '') ~ ' ' ~ (resort.amenities or ''))|lower }}">
     <div class="card-img">
-      <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}">
+      <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}" decoding="async">
     </div>
     <div class="card-body">
       <h3>{{ resort.resort_name }}</h3>

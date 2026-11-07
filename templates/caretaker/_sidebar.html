@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <a class="caretaker-brand-link" href="{{ url_for('caretaker_dashboard') }}" aria-label="Dashboard"><img class="sidebar-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143"></a>
+    <a class="caretaker-brand-link" href="{{ url_for('caretaker_dashboard') }}" aria-label="Dashboard"><img class="sidebar-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143" decoding="async"></a>
   </div>
   <ul class="sidebar-nav" aria-label="Caretaker navigation">
     <li><a href="{{ url_for('caretaker_dashboard') }}" class="{{ 'active' if request.endpoint == 'caretaker_dashboard' else '' }}"><span class="icon"><i class="fa-solid fa-grip"></i></span> Dashboard</a></li>

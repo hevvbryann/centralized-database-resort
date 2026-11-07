@@ -110,7 +110,7 @@ body{
 .about-hero{
   background:
     linear-gradient(rgba(0,40,25,.55), rgba(0,40,25,.55)),
-    url("../images/bg_landingpage.jpg") center/cover;
+    url("../images/bg_landingpage.webp") center/cover;
   min-height: 260px;
 }
 

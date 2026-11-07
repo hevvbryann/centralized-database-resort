@@ -11,12 +11,14 @@
 <script src="{{ url_for('static', filename='js/responsive_navigation.js') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
 
 <header>
   <div class="logo">
-    <img class="brand-image" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143">
+    <img class="brand-image" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143" decoding="async">
   </div>
   <nav>
     <a href="{{ url_for('index') }}">Home</a>
@@ -126,10 +128,10 @@
       <button class="btn-line">Explore Amenities</button>
     </div>
     <div class="photo-grid">
-      <img class="p1" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=500" alt="">
-      <img class="p2" src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=500" alt="">
-      <img class="p3" src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=500" alt="">
-      <img class="p4" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=500" alt="">
+      <img class="p1" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=500" alt="" decoding="async" loading="lazy">
+      <img class="p2" src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=500" alt="" decoding="async" loading="lazy">
+      <img class="p3" src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=500" alt="" decoding="async" loading="lazy">
+      <img class="p4" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=500" alt="" decoding="async" loading="lazy">
     </div>
   </div>
 

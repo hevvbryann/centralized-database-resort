@@ -14,6 +14,8 @@
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
 <script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="caretaker-ui">
 
@@ -75,7 +77,7 @@
       </div>
       {% for update in updates %}
       <div class="update-row" data-category="{{ update.type or 'notice' }}" data-search="{{ ((update.title or '') ~ ' ' ~ (update.message or ''))|lower }}">
-        {% if update.image_url %}<img class="update-thumb" src="{{ update.image_url }}" alt="Update picture" style="object-fit:cover">{% else %}<div class="update-thumb"></div>{% endif %}
+        {% if update.image_url %}<img class="update-thumb" src="{{ update.image_url }}" alt="Update picture" style="object-fit:cover" decoding="async" loading="lazy">{% else %}<div class="update-thumb"></div>{% endif %}
         <div class="update-info">
           <h4>{{ update.title }}</h4>
           <p>{{ update.message }}</p>

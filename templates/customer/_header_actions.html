@@ -5,7 +5,7 @@
   <a class="profile-destination" href="{{ url_for('customer_profileSetting') }}" aria-label="Profile settings" title="Profile settings">
     {% set header_photo = profile_photo|default(session.get('profile_photo'), true) %}
     {% if header_photo %}
-      <img class="avatar" src="{{ header_photo }}" alt="" style="object-fit:cover;">
+      <img class="avatar" src="{{ header_photo }}" alt="" style="object-fit:cover;" decoding="async" loading="lazy">
     {% else %}
       <span class="avatar" aria-hidden="true">{{ session.get('fullname', 'U')[:1]|upper }}</span>
     {% endif %}

@@ -39,6 +39,8 @@
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
 <script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body class="caretaker-ui">
 
@@ -75,7 +77,7 @@
 
       <section class="ops-overview-grid">
         <article class="property-hero">
-          <img src="{{ resort.display_image or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}">
+          <img src="{{ resort.display_image or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}" decoding="async" loading="lazy">
           <div class="property-hero-shade"></div>
           <div class="property-hero-content">
             <span class="property-live"><i class="fa-solid fa-circle"></i> {{ resort.status }}</span>
@@ -156,7 +158,7 @@
                 <td>{{ b.payer_name or '—' }}<small>{{ b.payer_phone or 'Phone not provided' }}</small></td>
                 <td>{{ b.reference_number or '—' }}</td>
                 <td>{{ b.customer_decision or 'Pending' }}</td>
-                <td>{% if b.proof_url %}<a href="{{ b.proof_url }}" target="_blank"><img class="bk-proof" src="{{ b.proof_url }}" alt="Payment proof"></a>{% else %}<small>No proof</small>{% endif %}</td>
+                <td>{% if b.proof_url %}<a href="{{ b.proof_url }}" target="_blank"><img class="bk-proof" src="{{ b.proof_url }}" alt="Payment proof" decoding="async" loading="lazy"></a>{% else %}<small>No proof</small>{% endif %}</td>
                 <td><span class="bk-pill {{ b.reservation_status|lower }}">{{ b.reservation_status }}</span></td>
                 <td>
                   {% if b.can_review or b.can_reject %}

@@ -44,17 +44,19 @@
   </style>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+      <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a></div>
       {% include 'customer/_sidebar_nav.html' %}
       <a class="logout" href="{{ url_for('logout') }}">&larr; Log out</a>
     </aside>
     <div class="main">
       <header class="topbar">
-        <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a>
+        <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a>
         <nav class="topbar-links" aria-label="Customer shortcuts">
           <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
           <a href="{{ url_for('customer_reservation') }}">My reservations</a>

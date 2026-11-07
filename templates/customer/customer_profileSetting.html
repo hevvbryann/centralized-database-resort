@@ -12,13 +12,15 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
 
 <div class="layout">
 
   <aside class="sidebar">
-    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 220px; height: auto;" width="473" height="143"></a>
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 220px; height: auto;" width="473" height="143" decoding="async"></a>
     </div>
 
     {% include 'customer/_sidebar_nav.html' %}
@@ -36,7 +38,7 @@
 
   <div class="main">
     <header class="topbar">
-      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143"></a>
+      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143" decoding="async"></a>
       </div>
 
       <nav class="topbar-links">
@@ -69,7 +71,7 @@
         <form class="account-profile-form" method="POST" action="{{ url_for('customer_profileSetting') }}" enctype="multipart/form-data">
           <div class="field account-photo-panel"><span class="account-section-icon" aria-hidden="true"><i class="fa-regular fa-user"></i></span><h4>Your profile</h4><p>Add a photo to personalize your account.</p>
             <label for="profile_picture">Profile Photo</label>
-            {% if profile_photo %}<img src="{{ profile_photo }}" alt="Current profile photo" style="width:88px;height:88px;display:block;object-fit:cover;border-radius:50%;margin:8px 0 12px;">{% endif %}
+            {% if profile_photo %}<img src="{{ profile_photo }}" alt="Current profile photo" style="width:88px;height:88px;display:block;object-fit:cover;border-radius:50%;margin:8px 0 12px;" decoding="async">{% endif %}
             <input type="file" id="profile_picture" name="profile_picture" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
             <small>JPG, PNG, or WEBP · up to 5 MB</small>
           </div>

@@ -9,17 +9,19 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+      <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a></div>
       {% include 'customer/_sidebar_nav.html' %}
       <a class="logout" href="{{ url_for('logout') }}">&larr; Log out</a>
     </aside>
     <div class="main">
       <header class="topbar">
-        <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a>
+        <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143" decoding="async"></a>
         <nav class="topbar-links" aria-label="Customer shortcuts">
           <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
           <a href="{{ url_for('customer_reservation') }}">My reservations</a>
@@ -36,7 +38,7 @@
         <section class="customer-updates-list" aria-label="Recent resort updates">
           {% for update in updates %}
           <article class="customer-update-card">
-            {% if update.image_url %}<img class="customer-update-image" src="{{ update.image_url }}" alt="{{ update.title }}">{% else %}<div class="customer-update-icon"><i class="fa-regular fa-bell"></i></div>{% endif %}
+            {% if update.image_url %}<img class="customer-update-image" src="{{ update.image_url }}" alt="{{ update.title }}" decoding="async" loading="lazy">{% else %}<div class="customer-update-icon"><i class="fa-regular fa-bell"></i></div>{% endif %}
             <div class="customer-update-content">
               <div class="customer-update-meta"><span>{{ update.resort_name or 'Pansol Resorts' }}</span><span>{{ update.category|title }}</span></div>
               <h2>{{ update.title }}</h2>

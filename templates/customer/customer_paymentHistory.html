@@ -11,13 +11,15 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 <body>
 
 <div class="layout">
 
   <aside class="sidebar">
-    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 220px; height: auto;" width="473" height="143"></a>
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 220px; height: auto;" width="473" height="143" decoding="async"></a>
     </div>
 
     {% include 'customer/_sidebar_nav.html' %}
@@ -35,7 +37,7 @@
 
   <div class="main">
     <header class="topbar">
-      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143"></a>
+      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143" decoding="async"></a>
       </div>
 
       <nav class="topbar-links">

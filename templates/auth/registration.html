@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <script src="{{ url_for('static', filename='js/registration.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
 
 <body class="auth-registration">
@@ -26,7 +28,7 @@
 
         <!-- LOGO -->
         <div class="logo">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143" decoding="async">
         </div>
 
         <!-- HEADER -->
@@ -270,8 +272,8 @@
     <div class="right-panel">
 
         <img
-            src="{{ url_for('static', filename='images/side_panel.png') }}"
-            alt="Resort">
+            src="{{ url_for('static', filename='images/side_panel.webp') }}"
+            alt="Resort" decoding="async" loading="lazy">
         <div class="registration-welcome"><span>YOUR NEXT ESCAPE STARTS HERE</span><h2>Make room for<br>great memories.</h2><p>Create your account and discover your next stay in Pansol.</p></div>
 
     </div>

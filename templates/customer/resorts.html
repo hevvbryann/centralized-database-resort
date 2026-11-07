@@ -15,17 +15,19 @@
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
 <style>@view-transition { navigation: none; }</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+<script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
 </head>
   <body class="explore-page">
     <div class="app">
       <aside class="sidebar">
-        <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" style="width:220px;height:auto;" width="473" height="143"></a></div>
+        <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" style="width:220px;height:auto;" width="473" height="143" decoding="async"></a></div>
         {% include 'customer/_sidebar_nav.html' %}
         <a class="logout" href="{{ url_for('logout') }}">&larr; Log Out</a>
       </aside>
       <div class="main">
         <header class="topbar">
-          <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143"></a>
+          <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143" decoding="async"></a>
           </div>
           <nav class="topbar-links">
             <a href="/customer_landingpage"> Home </a>
@@ -760,7 +762,7 @@
                 <button class="ewallet-card" type="button" data-w="${w.id}" aria-pressed="false">
                   <span class="wallet-card-heading"><span class="wallet-wordmark wallet-${w.id}" aria-hidden="true">${w.id === 'gcash' ? 'G' : 'M'}</span><span><b>${w.label}</b><small>Scan to pay</small></span><span class="payment-choice-indicator" aria-hidden="true"></span></span>
                   <span class="qr-box">
-                    <img src="${w.qr}" alt="${w.label} payment QR code" data-qr-image>
+                    <img src="${w.qr}" alt="${w.label} payment QR code" data-qr-image decoding="async" loading="lazy">
                     <span class="qr-unavailable" data-qr-fallback hidden>QR code not available yet. Please contact support before transferring.</span>
                   </span>
                   <span class="wallet-recipient-label">PAYMENT RECIPIENT</span>
@@ -1043,7 +1045,7 @@
     cardRow.innerHTML = resorts.map(r => `
       <div class="rcard ${r.id === currentId ? 'selected' : ''}" data-resort-id="${r.id}" onclick="selectResort('${r.id}')">
         <div class="thumb">
-          ${r.logo ? `<img src="${r.logo}" alt="${r.name}">` : scene(r.variant, 20)}
+          ${r.logo ? `<img src="${r.logo}" alt="${r.name}" decoding="async">` : scene(r.variant, 20)}
           <button class="heart ${favs.has(r.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav('${r.id}')">
             <svg viewBox="0 0 24 24" fill="${favs.has(r.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
               <path d="M12 21s-8-4.5-8-11a5 5 0 019-3 5 5 0 019 3c0 6.5-8 11-8 11z"/>
@@ -1113,7 +1115,7 @@
     if (!r) return;
     document.getElementById('heroImg').querySelector('svg, img.resort-photo')?.remove();
     document.getElementById('heroImg').insertAdjacentHTML('afterbegin', r.logo
-      ? `<img class="resort-photo" src="${r.logo}" alt="${r.name}">`
+      ? `<img class="resort-photo" src="${r.logo}" alt="${r.name}" decoding="async">`
       : scene(r.variant, 10));
     document.getElementById('heroHeart').classList.toggle('active', favs.has(r.id));
     document.getElementById('d-name').textContent = r.name;
@@ -1134,7 +1136,7 @@
       <div>${ic.clock} 22-Hour Tour &nbsp; <b>2:00 PM - 12:00 NN</b></div>
     `;
     document.getElementById('ov-gallery').innerHTML = r.photos.length
-      ? r.photos.slice(0, 6).map(src => `<div><img src="${src}" alt="${r.name} photo"></div>`).join('')
+      ? r.photos.slice(0, 6).map(src => `<div><img src="${src}" alt="${r.name} photo" decoding="async" loading="lazy"></div>`).join('')
       : `<p class="gallery-empty">No additional resort photos available.</p>`;
     document.getElementById('ov-map').innerHTML = miniMap(r);
     document.getElementById('am-grid').innerHTML = r.amenitiesFull.map(a => `
@@ -1322,7 +1324,7 @@
     overlay.innerHTML = `<div style="width:min(900px,100%);position:relative;color:#fff;text-align:center;"><button aria-label="Close gallery" style="position:absolute;right:0;top:-42px;font-size:28px;background:none;border:0;color:#fff;cursor:pointer;">&times;</button><h3>${resort.name} Gallery</h3><div id="galleryImage" style="background:#fff;border-radius:10px;overflow:hidden;"></div><div style="margin-top:14px;"><button id="galleryPrev">&larr; Previous</button> <span id="galleryCount"></span> <button id="galleryNext">Next &rarr;</button></div></div>`;
     const render = () => {
       overlay.querySelector('#galleryImage').innerHTML = photos.length
-        ? `<img src="${photos[index]}" alt="${resort.name} photo ${index + 1}" style="display:block;width:100%;max-height:70vh;object-fit:contain;">`
+        ? `<img src="${photos[index]}" alt="${resort.name} photo ${index + 1}" style="display:block;width:100%;max-height:70vh;object-fit:contain;" decoding="async" loading="lazy">`
         : `<p style="padding:40px;color:#333;">No photos have been added for this resort yet.</p>`;
       overlay.querySelector('#galleryCount').textContent = photos.length ? `${index + 1} / ${photos.length}` : '0 photos';
       overlay.querySelector('#galleryPrev').disabled = photos.length < 2;

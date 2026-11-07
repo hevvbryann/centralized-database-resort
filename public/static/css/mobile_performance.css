@@ -1,0 +1,70 @@
+/* Fluid layouts, predictable touch targets and lightweight motion. */
+:root { --phone-gutter: clamp(12px, 4vw, 24px); }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 90px; }
+body { animation: none; }
+:where(main, .main, .content, .page-content, .main-content, .panel, .card) { min-width: 0; }
+:where(img, video) { max-width: 100%; }
+:where(button, a, input, select, textarea) { touch-action: manipulation; }
+:where(a, button, input, select, textarea):focus-visible { outline: 3px solid #67a88a; outline-offset: 3px; }
+.responsive-table { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.responsive-table:focus-visible { outline-offset: -3px; }
+
+@media (max-width: 1024px) {
+  :where(.chart-grid, .stat-cards, .resort-stat-grid, .my-resort-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  :where(.owner-ui .content, .customer-ui .content) { min-width: 0; }
+  .donut-wrap { flex-wrap: wrap; }
+}
+@media (max-width: 767px) {
+  .hero.resort-carousel { height: auto !important; min-height: 440px; padding: 0 !important; }
+  .hero.resort-carousel .resort-carousel-track { position: relative; inset: auto; display: grid; min-height: 440px; }
+  .hero.resort-carousel .resort-carousel-track .resort-hero-slide {
+    grid-area: 1 / 1; position: relative; inset: auto; display: flex;
+    align-items: center; min-width: 0; padding: 38px var(--phone-gutter) 94px;
+  }
+  .hero.resort-carousel .resort-hero-slide > img { position: absolute; inset: 0; }
+  .resort-hero-slide::after { background: linear-gradient(90deg, #071f17d9, #071f1780); }
+  .hero.resort-carousel .resort-hero-copy { position: relative; inset: auto; transform: none; width: 100%; min-width: 0; }
+  .hero.resort-carousel .resort-hero-copy .resort-kicker { font-size: 10px; line-height: 1.6; letter-spacing: .08em; overflow-wrap: anywhere; }
+  .hero.resort-carousel .resort-hero-copy h1 { font-size: clamp(28px, 8vw, 42px); overflow-wrap: break-word; }
+  .hero.resort-carousel .resort-hero-copy p { font-size: 15px; line-height: 1.6; }
+  .resort-hero-cta { min-height: 46px; align-items: center; margin-top: 20px; }
+  .hero.resort-carousel .resort-hero-controls { inset: auto 0 20px; padding-inline: var(--phone-gutter); }
+  .hero.resort-carousel .resort-hero-controls button { width: 44px; height: 44px; }
+  .hero.resort-carousel .resort-hero-dots { bottom: 32px; max-width: calc(100% - 140px); }
+  .hero.resort-carousel .resort-hero-dots button { min-height: 20px; background-clip: content-box; padding-block: 6px; }
+  .partner-carousel { width: calc(100% - 2 * var(--phone-gutter)); }
+  .partner-carousel-controls { align-items: flex-start; }
+  .partner-carousel-controls > p { flex: 1; min-width: 0; }
+  .partner-carousel-controls > div { display: flex; flex: 0 0 auto; gap: 6px; }
+  .partner-carousel-controls button { margin-left: 0; }
+  .partner-carousel .partner-resorts .resort-card { flex-basis: 100%; }
+}
+@media (max-width: 600px) {
+  :where(input:not([type=checkbox]):not([type=radio]), select, textarea) { font-size: 16px !important; min-width: 0; }
+  :where(.form-grid, .form-cols, .grid-2, .grid-3, .grid-4, .chart-grid, .stat-cards, .resort-stat-grid, .my-resort-grid) { grid-template-columns: minmax(0, 1fr) !important; }
+  :where(.toolbar, .header-actions, .form-actions, .filter-bar, .action-group) { flex-wrap: wrap; gap: 10px; }
+  :where(.toolbar, .filter-bar) > :where(input, select) { flex: 1 1 160px; min-width: 0; }
+  .auth-registration .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+  .auth-registration .step { min-width: 0; gap: 4px; white-space: normal; }
+  .auth-registration .step span { font-size: 10px; overflow-wrap: anywhere; }
+  .auth-registration .circle { width: 23px; height: 23px; flex-basis: 23px; }
+  .auth-registration .left-panel, .auth-login .right { padding-inline: clamp(16px, 5vw, 24px); }
+  .auth-registration .container, .auth-login .container { min-width: 0; width: 100%; }
+  .responsive-table table { min-width: 560px; }
+  :where(.responsive-table, .table-wrap, .table-responsive) .empty-state { max-width: calc(100vw - 96px); white-space: normal; }
+  :where(.modal-content, .modal-box, .modal-card) { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; overscroll-behavior: contain; }
+  :where(.content, .page-content, .main-content) { overflow-wrap: break-word; }
+  :where(.owner-topnav, .topbar, .topnav) { max-width: 100%; min-width: 0; }
+  .welcome-music { max-width: calc(100vw - 20px); bottom: max(10px, env(safe-area-inset-bottom)); }
+}
+@media (hover: none), (pointer: coarse) {
+  :where(.card, .panel, .customer-resort-card, .stat-card, .booking-card, button, .btn):hover { transform: none; }
+  :where(.customer-resort-image img, .thumb img, .resort-image img):hover { transform: none; filter: none; }
+  :where(.site-header, .topbar, .topnav) { backdrop-filter: none; }
+  :where(.site-menu-toggle, .customer-menu-toggle, .caretaker-menu-toggle, .owner-menu-toggle) { min-width: 44px; min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
