@@ -1,0 +1,19 @@
+<div class="sidebar">
+  <div class="brand"><a class="brand-destination" href="{{ url_for('dashboard') }}" aria-label="Dashboard"><img class="brand-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+  <nav class="side-nav" aria-label="Owner navigation">
+    {% for endpoint,label,icon,active in [
+      ('dashboard','Dashboard','grip',request.endpoint in ['dashboard','admin_dashboard']),
+      ('reservation','Reservations & Calendar','calendar-days',request.endpoint in ['reservation','reservation_detail','calendar','booking']),
+      ('properties','Properties','house',request.endpoint in ['properties','admin_property_detail','admin_property_manage','edit_property']),
+      ('payment','Payments','credit-card',request.endpoint in ['payment','admin_payments']),
+      ('guests','Guests','users',request.endpoint == 'guests'),
+      ('owner_support','Customer Support','envelope',request.endpoint == 'owner_support'),
+      ('reviews','Reviews','star',request.endpoint == 'reviews'),
+      ('reports','Reports','chart-column',request.endpoint == 'reports'),
+      ('settings','Settings','gear',request.endpoint == 'settings')
+    ] %}
+    <a class="side-link {{ 'active' if active else '' }}" href="{{ url_for(endpoint) }}" {% if active %}aria-current="page"{% endif %}><span class="icon" aria-hidden="true"><i class="fa-solid fa-{{ icon }}"></i></span>{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <a class="logout" href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Log Out</a>
+</div>

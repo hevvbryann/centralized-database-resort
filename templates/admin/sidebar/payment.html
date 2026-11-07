@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts — Payments</title>
+<link rel="stylesheet" href="{{url_for('static', filename='css/admin_style/admin.css')}}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
+<script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="owner-ui">
+
+<!--
+  NOTES FOR THIS PAGE (payments.html)
+  --------------------------------------------------
+  Sidebar-only page. Top stat cards are placeholder numbers —
+  replace with real aggregates from your payments table.
+
+  All pages share styles.css — do not fork styles per page.
+  Sidebar / top nav links are plain <a href="..."> pointing at
+  the sibling .html files, so this works as static prototype
+  files opened directly in a browser, or dropped into a real
+  app's templates folder later.
+-->
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  {% include 'admin/_sidebar.html' %}
+
+  <!-- MAIN -->
+  <div class="main">
+    {% include 'admin/_header.html' %}
+
+    <div class="content">
+      <h1 class="page-title">Payments</h1>
+      <p class="page-sub">Track incoming payments and outstanding balances</p>
+
+      <form class="toolbar" method="get" action="{{ url_for('admin_payments') }}">
+        <label for="start_date">From</label>
+        <input class="search-input" id="start_date" name="start_date" type="date" value="{{ start_date }}">
+        <label for="end_date">To</label>
+        <input class="search-input" id="end_date" name="end_date" type="date" value="{{ end_date }}">
+        <button class="btn btn-primary" type="submit">Apply Dates</button>
+        <a class="btn btn-outline" href="{{ url_for('admin_payments') }}">Current Month</a>
+      </form>
+
+      <div class="grid-4" style="margin-bottom:22px;">
+        <div class="stat-card"><div class="stat-label">Total Collected</div><div class="stat-value">&#8369;{{ "%.2f"|format(summary.collected or 0) }}</div><div class="stat-sub">This month</div></div>
+        <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value">&#8369;{{ "%.2f"|format(summary.pending or 0) }}</div><div class="stat-sub">{{ summary.pending_count or 0 }} payments</div></div>
+        <div class="stat-card"><div class="stat-label">Rejected</div><div class="stat-value">&#8369;{{ "%.2f"|format(summary.rejected or 0) }}</div><div class="stat-sub">{{ summary.rejected_count or 0 }} payments</div></div>
+        <div class="stat-card"><div class="stat-label">Verified</div><div class="stat-value">{{ summary.verified_count or 0 }}</div><div class="stat-sub">Transactions this month</div></div>
+      </div>
+
+      <div class="card" style="overflow-x:auto;">
+        <h3>Recent Transactions</h3>
+        <table>
+          <thead><tr><th>Transaction ID</th><th>Guest</th><th>Sender</th><th>Sender phone</th><th>Amount</th><th>Method</th><th>Reference</th><th>Receipt</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+  {% for p in payments %}
+  <tr>
+    <td>#PAY-{{ p.payment_id }}</td>
+    <td>{{ p.guest_name }}</td>
+    <td>{{ p.payer_name or '—' }}</td>
+    <td>{{ p.payer_phone or p.guest_phone or '—' }}</td>
+    <td>₱{{ "%.2f"|format(p.amount_paid) }}</td>
+    <td>{{ p.payment_method or '—' }}</td>
+    <td>{{ p.reference_number or '—' }}</td>
+    <td>{% if p.proof_url %}<a href="{{ p.proof_url }}" target="_blank" rel="noopener">View receipt</a>{% else %}—{% endif %}</td>
+    <td>{{ p.payment_date }}</td>
+    <td>
+      {% if p.payment_status == 'Verified' %}
+        <span class="pill pill-confirmed">Verified</span>
+      {% elif p.payment_status == 'Rejected' %}
+        <span class="pill pill-cancelled">Rejected</span>
+      {% else %}
+        <span class="pill pill-pending">Pending</span>
+      {% endif %}
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="10" style="text-align:center;">No payments yet.</td></tr>
+  {% endfor %}
+</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% include 'admin/_owner_navigation.html' %}
+</body>
+</html>

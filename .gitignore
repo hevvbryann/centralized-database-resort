@@ -1,0 +1,28 @@
+.env
+.env.*
+!.env.example
+.venv/
+env/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.vscode/
+vscode/
+credentials.json
+token.json
+
+# Runtime uploads can contain customer identity and payment documents.
+static/uploads/payments/
+static/uploads/profiles/
+static/uploads/walkin_proofs/
+static/uploads/resort_photos/
+static/uploads/resort_updates/
+# Uploaded replacement resort logos are runtime files; keep bundled named logos above.
+static/uploads/resorts/*/
+
+# Local database exports contain customer and reservation records.
+Dump*.sql
+.vercel/
+public/static/uploads/
+static/uploads/

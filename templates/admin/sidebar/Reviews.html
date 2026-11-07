@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts — Reviews</title>
+<link rel="stylesheet" href="{{url_for('static', filename='css/admin_style/admin.css')}}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
+<script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="owner-ui">
+
+<!--
+  NOTES FOR THIS PAGE (reviews.html)
+  --------------------------------------------------
+  Sidebar-only page. Star ratings are hardcoded HTML entities here —
+  generate them dynamically (loop 1-5) once wired to real data.
+
+  All pages share styles.css — do not fork styles per page.
+  Sidebar / top nav links are plain <a href="..."> pointing at
+  the sibling .html files, so this works as static prototype
+  files opened directly in a browser, or dropped into a real
+  app's templates folder later.
+-->
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  {% include 'admin/_sidebar.html' %}
+
+  <!-- MAIN -->
+  <div class="main">
+    {% include 'admin/_header.html' %}
+
+    <div class="content">
+      <h1 class="page-title">Reviews</h1>
+      <p class="page-sub">See what guests are saying about your resorts</p>
+
+      <form class="toolbar" method="get" action="{{ url_for('reviews') }}">
+        <label for="reviewMonth">Month</label>
+        <input class="search-input" id="reviewMonth" name="month" type="month" value="{{ selected_month }}">
+        <label for="reviewResort">Resort</label>
+        <select class="select-input" id="reviewResort" name="resort_id">
+          <option value="">All resorts</option>
+          {% for resort in review_resorts %}
+          <option value="{{ resort.resort_id }}" {{ 'selected' if selected_resort == resort.resort_id else '' }}>{{ resort.resort_name }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit">Apply Filters</button>
+        <a class="btn btn-outline" href="{{ url_for('reviews') }}">Current Month</a>
+      </form>
+
+      <div class="card">
+        {% for review in reviews %}
+        <div class="review-card">
+          <div class="review-top">
+            <div><span class="review-guest">{{ review.guest_name }}</span> &middot; <span class="review-resort">{{ review.resort_name }}</span></div>
+            <span class="stars">{% for star in range(1, 6) %}{{ '&#9733;' if star <= (review.rating or 0) else '&#9734;' }}{% endfor %}</span>
+          </div>
+          <div class="review-text">{{ review.comment or 'No comment provided.' }}</div>
+        </div>
+        {% else %}
+        <div class="empty-row">No reviews yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% include 'admin/_owner_navigation.html' %}
+</body>
+</html>

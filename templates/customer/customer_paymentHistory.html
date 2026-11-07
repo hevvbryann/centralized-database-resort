@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts | Payment History</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 220px; height: auto;" width="473" height="143"></a>
+    </div>
+
+    {% include 'customer/_sidebar_nav.html' %}
+
+    <a class="logout" href="{{ url_for('logout') }}"
+    style="margin-left:0px;
+    display:flex;
+    align-items:center;
+    margin-top: 130%;
+    color:#fff;
+    text-decoration:none;
+    opacity:.9;
+      "> &#8592; Log Out</a>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143"></a>
+      </div>
+
+      <nav class="topbar-links">
+        <a href="/customer_landingpage">Home</a>
+        <a href="/customer_aboutpage">About</a>
+        <a href="/resorts">Resorts</a>
+        <a href="/customer_howitworks">How it Works</a>
+      </nav>
+
+      {% include 'customer/_header_actions.html' %}
+    </header>
+
+    <main class="content">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <h1>Payment History</h1>
+      <p class="subtitle">Track every payment you've submitted and its verification status.</p>
+
+      <div class="panel" style="margin-top:20px;">
+        <h3>Payments</h3>
+        <p class="subtitle" style="margin-bottom:16px;">{{ payments|length }} payment record{{ '' if payments|length == 1 else 's' }}</p>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Resort</th>
+                <th>Reference No.</th>
+                <th>Amount Paid</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+                <th>Proof</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in payments %}
+              <tr>
+                <td><strong>{{ p.resort_name }}</strong></td>
+                <td>{{ p.reference_number or '—' }}</td>
+                <td>₱{{ '%.2f'|format(p.amount_paid) if p.amount_paid else '0.00' }}</td>
+                <td>{{ p.payment_date.strftime('%b %d, %Y - %I:%M %p') if p.payment_date else '—' }}</td>
+                <td><span class="badge {{ p.payment_status|lower }}">{{ p.payment_status }}</span></td>
+                <td>
+                  {% if p.proof_of_payment %}
+                    <a href="{{ p.proof_url }}" target="_blank" rel="noopener" class="view-all">View</a>
+                  {% else %}—{% endif %}
+                </td>
+                <td>{% if p.payment_status == 'Verified' %}<a href="{{ url_for('customer_payment_receipt', payment_id=p.payment_id) }}" class="view-all">Download receipt</a>{% else %}Available after verification{% endif %}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="7"><div class="empty-state">No payment records found.</div></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+
+</body>
+</html>

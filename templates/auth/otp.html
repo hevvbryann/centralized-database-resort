@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>OTP Verification</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/verification.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/verification_ui.css') }}">
+<script src="{{ url_for('static', filename='js/otp_input.js') }}" defer></script>
+</head>
+
+<body class="auth-verification">
+
+<div class="container">
+
+    <div class="left-panel">
+
+        <div class="logo">
+
+            <img src="{{ url_for('static', filename='images/logo.png') }}" width="473" height="143">
+
+            <div>
+                <h3>PANSOL RESORTS</h3>
+                <p>Reservation System</p>
+            </div>
+
+        </div>
+
+        <div class="progress">
+
+            <div class="step done">
+
+                <div class="circle">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <span>Account Info</span>
+
+            </div>
+
+            <div class="line active"></div>
+
+            <div class="step active">
+
+                <div class="circle">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <span>Verification</span>
+
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step">
+
+                <div class="circle">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <span>Completed</span>
+
+            </div>
+
+        </div>
+
+        <div class="content">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <p class="flash {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endwith %}
+
+            <div class="icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <span class="verification-eyebrow">VERIFY YOUR EMAIL</span><h2>Enter Verification Code</h2>
+
+            <p>
+                Code sent to
+                <strong>{{ email }}</strong>
+            </p>
+
+            <form action="{{ url_for('verify_otp') }}" method="POST">
+
+                <div class="otp-box" role="group" aria-label="Six-digit email verification code">
+
+                    <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" name="otp1" aria-label="Digit 1 of 6" autocomplete="one-time-code" required>
+                    <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" name="otp2" aria-label="Digit 2 of 6" autocomplete="off" required>
+                    <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" name="otp3" aria-label="Digit 3 of 6" autocomplete="off" required>
+                    <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" name="otp4" aria-label="Digit 4 of 6" autocomplete="off" required>
+                    <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" name="otp5" aria-label="Digit 5 of 6" autocomplete="off" required>
+                    <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" name="otp6" aria-label="Digit 6 of 6" autocomplete="off" required>
+
+                </div>
+                <p class="otp-hint">Type the 6-digit code or paste it directly from your email.</p>
+                <button type="submit">
+                    Verify Code
+                </button>
+
+            </form>
+
+            <form action="{{ url_for('resend_otp') }}" method="POST" class="resend">
+                <span>Didn't receive the code?</span>
+                <button type="submit">Resend code</button>
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="right-panel"><div class="verification-welcome"><span>YOUR NEXT ESCAPE STARTS HERE</span><h2>Almost there.<br>Your getaway awaits.</h2><p>Verify your email to finish setting up your Pansol Resorts account.</p></div>
+
+        <img src="{{ url_for('static', filename='images/side_panel.png') }}" alt="">
+
+    </div>
+
+</div>
+
+
+
+</body>
+
+</html>

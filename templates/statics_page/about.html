@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Pansol Resorts - About Us{% endblock %}
+{% set active_page = 'about' %}
+
+{% block content %}
+<script>window.location.replace("{{ url_for('index') }}#about");</script>
+<noscript>
+  <meta http-equiv="refresh" content="0; url={{ url_for('index') }}#about">
+</noscript>
+{% endblock %}

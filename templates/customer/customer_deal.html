@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pansol Resorts | Resort Picks</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/customer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+    {% include 'customer/_sidebar_nav.html' %}
+    <a class="logout" href="{{ url_for('logout') }}">Log out</a>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a>
+      <nav class="topbar-links">
+        <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('resorts') }}">Resorts</a>
+        <a href="{{ url_for('customer_reservation') }}">My reservations</a>
+        <a href="{{ url_for('customer_messages') }}">Updates</a>
+      </nav>
+      {% include 'customer/_header_actions.html' %}
+    </header>
+    <main class="content">
+      <div class="customer-page-heading">
+        <div><p class="eyebrow">STAYS IN PANSOL</p><h1>Resort picks</h1><p class="subtitle">Explore available resorts, compare details, and find a stay that suits your group.</p></div>
+        <a class="primary-action" href="{{ url_for('resorts') }}"><i class="fa-solid fa-magnifying-glass"></i> Browse all resorts</a>
+      </div>
+      {% if resorts %}
+      <section class="customer-resort-grid" aria-label="Available resorts">
+        {% for resort in resorts %}
+        <article class="customer-resort-card">
+          <a class="customer-resort-image" href="{{ url_for('resorts') }}" aria-label="Explore {{ resort.resort_name }}">
+            <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}">
+          </a>
+          <div class="customer-resort-body">
+            <p class="customer-resort-location"><i class="fa-solid fa-location-dot"></i> {{ resort.address or 'Pansol, Calamba, Laguna' }}</p>
+            <h2>{{ resort.resort_name }}</h2>
+            <p class="customer-resort-description">{{ resort.description or 'Review amenities, pricing, and available dates for your stay.' }}</p>
+            {% include 'customer/_resort_rates.html' %}
+<div class="customer-resort-footer">
+              <div><small>Starting price</small><strong>{% if resort.price %}₱{{ '{:,.2f}'.format(resort.price|float) }}{% else %}See resort details{% endif %}</strong></div>
+              {% if session.get('role') == 'customer' %}
+              <form method="post" action="{{ url_for('toggle_customer_favorite', resort_id=resort.resort_id) }}">
+                <button class="icon-action" type="submit" aria-label="Save {{ resort.resort_name }}"><i class="fa-regular fa-heart"></i></button>
+              </form>
+              {% endif %}
+            </div>
+            <a class="secondary-action customer-resort-link" href="{{ url_for('resorts') }}">Check resort and availability <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
+      {% else %}
+      <section class="panel customer-empty-state"><span class="empty-icon"><i class="fa-solid fa-umbrella-beach"></i></span><h2>No resorts are available right now</h2><p>Please check back soon for available stays in Pansol.</p></section>
+      {% endif %}
+    </main>
+  </div>
+</div>
+
+
+</body>
+</html>

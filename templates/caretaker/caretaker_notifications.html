@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notifications — Pansol Resorts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker/styles.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_responsive.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
+<script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+</head>
+<body class="caretaker-ui">
+
+{% include 'caretaker/_sidebar.html' %}
+
+<div class="main">
+  {% include 'caretaker/_header.html' %}
+
+  <div class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<div class="flash {{ category }}" role="status">{{ message }}</div>{% endfor %}
+    {% endwith %}
+    <div class="page-header">
+      <div>
+        <h1>Notifications</h1>
+        <p>Stay up to date with alerts across your resort.</p>
+      </div>
+      <div class="header-actions">
+        <form method="post" action="{{ url_for('caretaker_mark_notifications_read') }}"><button class="btn btn-outline btn-sm" type="submit">Mark all as read</button></form>
+      </div>
+    </div>
+
+    <div class="card notif-panel">
+      {% for notification in notifications %}
+      <div class="notif-item {{ 'unread' if not notification.is_read else '' }}">
+        <div class="notif-icon info">&#8505;</div>
+        <div class="notif-text">
+          <div class="title">{{ notification.title }}</div>
+          <div class="desc">{{ notification.message }}</div>
+          <div class="time">{{ notification.created_at.strftime('%b %d, %Y %I:%M %p') }}</div>
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state">You have no notifications right now.</div>
+      {% endfor %}
+
+      <!-- Example structure for when notifications exist -->
+      <!--
+      <div class="notif-item">
+        <div class="notif-icon warning">⚠</div>
+        <div class="notif-text">
+          <div class="title">Low stock alert: Bath Towels</div>
+          <div class="desc">Only 4 units remaining, below the reorder threshold.</div>
+          <div class="time">2 hours ago</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon success">✓</div>
+        <div class="notif-text">
+          <div class="title">Maintenance request completed</div>
+          <div class="desc">Air conditioning repair in Cottage 2 marked as done.</div>
+          <div class="time">Yesterday</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon info">ℹ</div>
+        <div class="notif-text">
+          <div class="title">New message from Head Office</div>
+          <div class="desc">Please confirm the weekend housekeeping schedule.</div>
+          <div class="time">2 days ago</div>
+        </div>
+      </div>
+      -->
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>

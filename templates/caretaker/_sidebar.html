@@ -1,0 +1,18 @@
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a class="caretaker-brand-link" href="{{ url_for('caretaker_dashboard') }}" aria-label="Dashboard"><img class="sidebar-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143"></a>
+  </div>
+  <ul class="sidebar-nav" aria-label="Caretaker navigation">
+    <li><a href="{{ url_for('caretaker_dashboard') }}" class="{{ 'active' if request.endpoint == 'caretaker_dashboard' else '' }}"><span class="icon"><i class="fa-solid fa-grip"></i></span> Dashboard</a></li>
+    <li><a href="{{ url_for('caretaker_settings') }}" class="{{ 'active' if request.endpoint == 'caretaker_settings' else '' }}"><span class="icon"><i class="fa-solid fa-user-gear"></i></span> Profile Settings</a></li>
+    <li><a href="{{ url_for('caretaker_updates') }}" class="{{ 'active' if request.endpoint in ['caretaker_updates', 'caretaker_updates_data'] else '' }}"><span class="icon"><i class="fa-solid fa-arrows-rotate"></i></span> Updates</a></li>
+    <li><a href="{{ url_for('caretaker_guests') }}" class="{{ 'active' if request.endpoint in ['caretaker_guests', 'caretaker_review_reservation'] else '' }}"><span class="icon"><i class="fa-solid fa-users"></i></span> Guests &amp; Reservations</a></li>
+    <li><a href="{{ url_for('caretaker_inventory') }}" class="{{ 'active' if request.endpoint in ['caretaker_inventory', 'caretaker_inventory_data'] else '' }}"><span class="icon"><i class="fa-solid fa-calendar-check"></i></span> Reservation Records</a></li>
+    <li><a href="{{ url_for('caretaker_maintenance') }}" class="{{ 'active' if request.endpoint == 'caretaker_maintenance' else '' }}"><span class="icon"><i class="fa-solid fa-screwdriver-wrench"></i></span> Maintenance</a></li>
+    <li><a href="{{ url_for('caretaker_reports') }}" class="{{ 'active' if request.endpoint == 'caretaker_reports' else '' }}"><span class="icon"><i class="fa-solid fa-chart-column"></i></span> Reports</a></li>
+    <li><a href="{{ url_for('caretaker_notifications') }}" class="{{ 'active' if request.endpoint == 'caretaker_notifications' else '' }}"><span class="icon"><i class="fa-solid fa-bell"></i></span> Notifications</a></li>
+  </ul>
+  <div class="sidebar-footer">&copy; 2026 Pansol Resorts</div>
+  <a class="logout" href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+</aside>
+<script src="{{ url_for('static', filename='js/caretaker_navigation.js') }}" defer></script>

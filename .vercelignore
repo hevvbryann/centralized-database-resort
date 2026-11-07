@@ -1,0 +1,15 @@
+.git
+.vercel
+.env
+.env.*
+!.env.example
+Dump*.sql
+*.zip
+credentials.json
+token.json
+**/__pycache__/**
+**/*.pyc
+static/uploads/**
+archive/**
+tests/**
+.vscode/**

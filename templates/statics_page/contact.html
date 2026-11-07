@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Pansol Resorts - Contact Us{% endblock %}
+{% set active_page = 'contact' %}
+
+{% block content %}
+<script>window.location.replace("{{ url_for('index') }}#contact");</script>
+<noscript>
+  <meta http-equiv="refresh" content="0; url={{ url_for('index') }}#contact">
+</noscript>
+{% endblock %}

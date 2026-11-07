@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Updates — Pansol Resorts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker/styles.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_responsive.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
+<script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+</head>
+<body class="caretaker-ui">
+
+<!-- SIDEBAR -->
+{% include 'caretaker/_sidebar.html' %}
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  {% include 'caretaker/_header.html' %}
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Resort Updates</h1>
+        <p>Updates for {{ resort.resort_name }} and announcements shared across all resorts.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="newUpdate" type="button">+ New Update</button>
+        <button class="btn btn-primary" id="refreshUpdates" type="button">Refresh updates</button>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<div class="card" role="status" style="padding:12px;margin-bottom:12px">{{ message }}</div>{% endfor %}
+    {% endwith %}
+
+    <form class="card" id="newUpdateForm" method="post" enctype="multipart/form-data" style="padding:20px;margin-bottom:16px" hidden>
+      <h2>Post an update</h2>
+      <label>Post to</label>
+      <select name="target_scope" required>
+        <option value="assigned">{{ resort.resort_name }}</option>
+        <option value="all">All resorts</option>
+      </select>
+      <label>Title</label><input name="title" maxlength="100" required>
+      <label>Category</label>
+      <select name="category"><option value="notice">Notice</option><option value="event">Event</option><option value="promotion">Promotion</option><option value="facility">Facility</option></select>
+      <label>Details</label><textarea name="message" rows="4" maxlength="2000" required></textarea>
+      <label>Picture (optional, JPG/PNG/WEBP, up to 8 MB; scanned before upload)</label>
+      <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+      <button class="btn btn-primary" type="submit">Post update</button>
+      <button class="btn" id="cancelNewUpdate" type="button">Cancel</button>
+    </form>
+
+    <div class="toolbar">
+      <div class="search-box">🔍 <input type="text" placeholder="Search updates..."></div>
+      <select class="select-filter" id="updateCategory">
+        <option value="">All categories</option>
+        {% for category in updates|map(attribute='type')|select|unique|sort %}
+        <option value="{{ category }}">{{ category|replace('_', ' ')|title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="card" id="updatesCard" data-endpoint="{{ url_for('caretaker_updates_data') }}">
+      <div class="card-header">
+        <h2>Recent Updates <span id="updateCount">({{ updates|length }})</span></h2>
+      </div>
+      {% for update in updates %}
+      <div class="update-row" data-category="{{ update.type or 'notice' }}" data-search="{{ ((update.title or '') ~ ' ' ~ (update.message or ''))|lower }}">
+        {% if update.image_url %}<img class="update-thumb" src="{{ update.image_url }}" alt="Update picture" style="object-fit:cover">{% else %}<div class="update-thumb"></div>{% endif %}
+        <div class="update-info">
+          <h4>{{ update.title }}</h4>
+          <p>{{ update.message }}</p>
+          <small>{{ update.resort_name or 'All resorts' }}</small>
+        </div>
+        <span class="update-date">{{ update.created_at.strftime('%b %d, %Y %I:%M %p') if update.created_at else '' }}</span>
+      </div>
+      {% else %}
+      <div class="empty-state" id="updatesEmpty">No resort updates have been added yet.</div>
+      {% endfor %}
+      <div class="empty-state" id="updatesFilteredEmpty" hidden>No updates match these filters.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const card = document.getElementById('updatesCard');
+  const search = document.querySelector('.search-box input');
+  const category = document.getElementById('updateCategory');
+  const count = document.getElementById('updateCount');
+  const endpoint = card.dataset.endpoint;
+
+  function applyFilters() {
+    const query = search.value.trim().toLowerCase();
+    const selected = category.value;
+    let visible = 0;
+    card.querySelectorAll('.update-row').forEach((row) => {
+      const show = row.dataset.search.includes(query) && (!selected || row.dataset.category === selected);
+      row.hidden = !show;
+      if (show) visible++;
+    });
+    count.textContent = `(${visible})`;
+    const rowCount = card.querySelectorAll('.update-row').length;
+    document.getElementById('updatesFilteredEmpty').hidden = visible !== 0 || rowCount === 0;
+    const empty = document.getElementById('updatesEmpty');
+    if (empty) empty.hidden = rowCount !== 0;
+  }
+
+  function renderUpdates(items) {
+    card.querySelectorAll('.update-row, #updatesEmpty').forEach((node) => node.remove());
+    if (!items.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.id = 'updatesEmpty';
+      empty.textContent = 'No resort updates have been added yet.';
+      card.appendChild(empty);
+    } else {
+      items.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'update-row';
+        row.dataset.category = item.type || 'notice';
+        row.dataset.search = `${item.title} ${item.message}`.toLowerCase();
+        const thumb = document.createElement('div');
+        thumb.className = 'update-thumb';
+        let visual = thumb;
+        if (item.image_url) {
+          const image = document.createElement('img');
+          image.src = item.image_url;
+          image.alt = 'Update picture';
+          image.className = 'update-thumb';
+          image.style.objectFit = 'cover';
+          visual = image;
+        }
+        const info = document.createElement('div');
+        info.className = 'update-info';
+        const title = document.createElement('h4');
+        title.textContent = item.title;
+        const message = document.createElement('p');
+        message.textContent = item.message;
+        const scope = document.createElement('small');
+        scope.textContent = item.scope || 'All resorts';
+        info.append(title, message, scope);
+        const timestamp = document.createElement('span');
+        timestamp.className = 'update-date';
+        timestamp.textContent = item.created_at;
+        row.append(visual, info, timestamp);
+        card.appendChild(row);
+      });
+    }
+
+    const selected = category.value;
+    const types = [...new Set(items.map((item) => item.type || 'notice'))].sort();
+    category.replaceChildren(new Option('All categories', ''));
+    types.forEach((type) => {
+      const label = type.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+      category.add(new Option(label, type));
+    });
+    if (types.includes(selected)) category.value = selected;
+    applyFilters();
+  }
+
+  async function refresh() {
+    const button = document.getElementById('refreshUpdates');
+    button.disabled = true;
+    try {
+      const response = await fetch(endpoint, {headers: {'Accept': 'application/json'}, cache: 'no-store'});
+      if (!response.ok) throw new Error('Could not refresh');
+      const payload = await response.json();
+      renderUpdates(payload.updates || []);
+      button.title = 'Updates are current.';
+    } catch (_) {
+      button.title = 'Could not refresh updates. Check your connection and try again.';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  search.addEventListener('input', applyFilters);
+  category.addEventListener('change', applyFilters);
+  document.getElementById('refreshUpdates').addEventListener('click', refresh);
+  const form = document.getElementById('newUpdateForm');
+  document.getElementById('newUpdate').addEventListener('click', () => { form.hidden = !form.hidden; });
+  document.getElementById('cancelNewUpdate').addEventListener('click', () => { form.hidden = true; });
+  window.setInterval(() => { if (!document.hidden) refresh(); }, 15000);
+})();
+</script>
+
+
+
+</body>
+</html>

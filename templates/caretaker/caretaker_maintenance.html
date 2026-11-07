@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maintenance — Pansol Resorts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker/styles.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_responsive.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretaker_ui.css') }}">
+<script src="{{ url_for('static', filename='js/caretaker_ui.js') }}" defer></script>
+</head>
+<body class="caretaker-ui">
+
+{% include 'caretaker/_sidebar.html' %}
+
+<div class="main">
+  {% include 'caretaker/_header.html' %}
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Maintenance</h1>
+        <p>Log maintenance requests for {{ resort.resort_name }}. The admin is notified as soon as you submit one.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('newTicketModal').classList.add('open')">+ New Request</button>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<div class="flash {{ category }}" style="padding:10px 14px;border-radius:8px;margin-bottom:12px;background:#f1f5f2;">{{ message }}</div>{% endfor %}
+    {% endwith %}
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-label">Total Requests</div><div class="stat-value" id="stTotal">0</div></div>
+      <div class="stat-card"><div class="stat-label">Awaiting Admin</div><div class="stat-value" id="stAwaiting">0</div></div>
+      <div class="stat-card"><div class="stat-label">Seen by Admin</div><div class="stat-value" id="stSeen">0</div></div>
+      <div class="stat-card"><div class="stat-label">Urgent</div><div class="stat-value" id="stUrgent">0</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-box">🔍 <input type="text" id="q" placeholder="Search maintenance request..."></div>
+      <select class="select-filter" id="prioFilter">
+        <option value="">All Priority</option><option>Urgent</option><option>High</option><option>Normal</option><option>Low</option>
+      </select>
+      <select class="select-filter" id="statFilter">
+        <option value="">All Status</option><option>Awaiting admin</option><option>Seen by admin</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Maintenance Requests</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Issue</th><th>Location</th><th>Priority</th><th>Status</th><th>Reported</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="5" class="empty-state">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="newTicketModal">
+  <form class="modal" method="post" action="{{ url_for('caretaker_maintenance') }}">
+    <h3>New Maintenance Request</h3>
+    <div class="form-group"><label>Issue Title</label><input type="text" name="title" maxlength="100" required placeholder="e.g. Air conditioning not cooling"></div>
+    <div class="form-group"><label>Location</label><input type="text" name="location" maxlength="100" required placeholder="e.g. Cottage 2"></div>
+    <div class="form-group"><label>Priority</label>
+      <select name="priority"><option>Low</option><option selected>Normal</option><option>High</option><option>Urgent</option></select>
+    </div>
+    <div class="form-group"><label>Description</label><textarea name="description" rows="4" maxlength="1000" required placeholder="Describe the issue..."></textarea></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" onclick="document.getElementById('newTicketModal').classList.remove('open')">Cancel</button>
+      <button type="submit" class="btn btn-primary">Submit Request</button>
+    </div>
+  </form>
+</div>
+
+<script>
+let state = {{ data|tojson }};
+const DATA_URL = "{{ url_for('caretaker_maintenance_data') }}";
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render() {
+  const q = document.getElementById('q').value.toLowerCase(), pr = prioFilter.value, st = statFilter.value, s = state.stats;
+  stTotal.textContent = s.total || 0; stAwaiting.textContent = s.awaiting || 0; stSeen.textContent = s.seen || 0; stUrgent.textContent = s.urgent || 0;
+  const list = state.requests.filter(r => (!pr || r.priority === pr) && (!st || r.status === st) &&
+    (!q || (r.issue + ' ' + r.location + ' ' + r.description).toLowerCase().includes(q)));
+  rows.innerHTML = list.length ? list.map(r => `
+    <tr><td><strong>${esc(r.issue)}</strong><br><small>${esc(r.description)}</small></td>
+    <td>${esc(r.location)}</td><td>${esc(r.priority)}</td><td>${esc(r.status)}</td><td>${esc(r.reported)}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="empty-state">No maintenance requests logged yet.</td></tr>';
+}
+[q, prioFilter, statFilter].forEach(e => e.addEventListener('input', render));
+async function refresh() { try { const r = await fetch(DATA_URL); if (r.ok) { state = await r.json(); render(); } } catch (e) {} }
+render(); setInterval(refresh, 15000);
+</script>
+
+
+</body>
+</html>

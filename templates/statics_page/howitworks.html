@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Pansol Resorts - How It Works{% endblock %}
+{% set active_page = 'howitworks' %}
+
+{% block content %}
+<script>window.location.replace("{{ url_for('index') }}#howitworks");</script>
+<noscript>
+  <meta http-equiv="refresh" content="0; url={{ url_for('index') }}#howitworks">
+</noscript>
+{% endblock %}

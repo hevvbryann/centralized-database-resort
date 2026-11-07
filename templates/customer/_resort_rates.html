@@ -1,0 +1,6 @@
+{% if resort.weekday_price is defined and resort.weekday_price is not none and resort.weekend_price is defined and resort.weekend_price is not none %}
+<div class="resort-date-rates">
+  <span><small>Weekdays · Mon–Fri</small><strong>₱{{ '{:,.0f}'.format(resort.weekday_price) }}</strong></span>
+  <span><small>Weekends · Sat–Sun</small><strong>₱{{ '{:,.0f}'.format(resort.weekend_price) }}</strong></span>
+</div>
+{% endif %}

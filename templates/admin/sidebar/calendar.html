@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts — Booking Calendar</title>
+<link rel="stylesheet" href="{{url_for('static', filename='css/admin_style/admin.css')}}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
+<script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="owner-ui">
+
+<!--
+  NOTES FOR THIS PAGE (calendar.html)
+  --------------------------------------------------
+  Calendar dates and reservation events are loaded from the database by
+  the calendar route and scoped to the signed-in owner.
+
+  All pages share styles.css — do not fork styles per page.
+  Sidebar / top nav links are plain <a href="..."> pointing at
+  the sibling .html files, so this works as static prototype
+  files opened directly in a browser, or dropped into a real
+  app's templates folder later.
+-->
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  {% include 'admin/_sidebar.html' %}
+
+  <!-- MAIN -->
+  <div class="main">
+    {% include 'admin/_header.html' %}
+
+    <div class="content">
+      <h1 class="page-title">Booking Calendar</h1>
+      <p class="page-sub">Occupancy overview for all resorts this month</p>
+
+      <div class="card owner-calendar-section">
+        <div class="card-row">
+          <h3 style="margin:0;">{{ calendar_month }}</h3>
+          <div class="action-group">
+            <a class="btn btn-outline btn-sm" href="{{ url_for('calendar', year=previous_month.year, month=previous_month.month) }}">&larr; Prev</a>
+            <a class="btn btn-outline btn-sm" href="{{ url_for('calendar', year=next_month.year, month=next_month.month) }}">Next &rarr;</a>
+          </div>
+        </div>
+        <div class="owner-calendar-legend" aria-label="Calendar legend"><span class="legend-pending">Pending</span><span class="legend-confirmed">Confirmed</span><span class="legend-walkin">Walk-in</span><span class="legend-today">Today</span></div><div class="owner-calendar-scroll" tabindex="0" aria-label="Booking calendar, scroll horizontally on smaller screens"><div class="calendar-grid">
+          <div class="cal-head">Sun</div><div class="cal-head">Mon</div><div class="cal-head">Tue</div><div class="cal-head">Wed</div><div class="cal-head">Thu</div><div class="cal-head">Fri</div><div class="cal-head">Sat</div>
+          {% for cell in calendar_days %}
+          {% set day_events = events_by_date.get(cell.day.isoformat(), []) %}
+          <div class="cal-cell {{ '' if cell.in_month else 'muted' }} {{ 'today' if cell.day == today else '' }} {{ 'reserved-day' if day_events else '' }}">
+            <div class="cal-date">{{ cell.day.day }}</div>
+            {% for event in day_events %}
+            <div class="cal-event reserved" title="{{ event.resort_name }} - {{ event.guest_name }} ({{ event.reservation_status }})">
+              {{ event.resort_name }} - {{ event.guest_name }}
+            </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% include 'admin/_owner_navigation.html' %}
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* Payment step only: keep QR codes untouched and all existing booking controls. */
+.booking-rate-note { margin: 12px 0 0; padding: 12px; border: 1px solid #dcebe1; border-radius: 10px; background: #f2f8f4; color: #647e6b; font-size: 11px; line-height: 1.8; }
+.payment-result { max-width: 550px; margin: 0 auto; padding: 12px 10px 4px; text-align: center; color: #214434; animation: payment-enter .35s ease both; }
+.payment-result-icon { display: grid; place-items: center; width: 70px; height: 70px; margin: 8px auto 26px; background: #eaf6ee; border: 1px solid #cee7d7; border-radius: 23px; color: #218058; box-shadow: 0 0 0 9px #f6faf7; font-size: 27px; }
+.payment-result-eyebrow { display: block; color: #648371; font-size: 9px; font-weight: 800; letter-spacing: .14em; margin-bottom: 10px; }
+.booking-modal .payment-result h3 { padding: 0 15px; margin: 0 0 12px; color: #214b35; font-size: clamp(24px,3vw,30px); letter-spacing: -.035em; line-height: 1.25; }
+.payment-result-description { max-width: 455px; margin: 0 auto 18px; color: #708276; font-size: 12px; line-height: 1.85; }
+.payment-result-status { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 1px solid #efdfbd; border-radius: 30px; background: #fff8e9; color: #997329; font-size: 10px; font-weight: 600; }
+.payment-result-status > span { width: 6px; height: 6px; border-radius: 50%; background: #c49b41; }
+.payment-result-next { padding: 20px; margin: 24px 0; background: #f5f9f6; border: 1px solid #e0ebe3; border-radius: 15px; text-align: left; }
+.payment-result-next h4 { margin: 0 0 17px; font-size: 12px; color: #355a42; }
+.payment-result-next ol { list-style: none; margin: 0; padding: 0; }
+.payment-result-next li { position: relative; display: flex; gap: 12px; align-items: flex-start; padding: 0 0 18px; }
+.payment-result-next li:last-child { padding-bottom: 0; }
+.payment-result-next li:not(:last-child)::after { content: ''; position: absolute; top: 29px; bottom: 4px; left: 14px; width: 1px; background: #d9e7de; }
+.payment-result-stage { display: grid; place-items: center; width: 29px; height: 29px; flex: 0 0 29px; background: #fff; border: 1px solid #dbe8df; border-radius: 9px; color: #789782; font-size: 11px; }
+.payment-result-next li:first-child .payment-result-stage { background: #e4f3e9; color: #28845a; border-color: #cbe4d3; }
+.payment-result-next strong { display: block; margin-top: 2px; font-size: 11px; color: #42664e; }
+.payment-result-next p { margin: 4px 0 0; color: #7a8c7f; font-size: 10px; line-height: 1.7; }
+.payment-result-action { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 48px; padding: 12px 16px; border: 0; border-radius: 11px; background: #187451; color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 15px #18745120; }
+.payment-result-action:hover { background: #12543e; }
+.payment-result-footnote { margin: 12px 0 0; color: #8a9a8e; font-size: 10px; line-height: 1.7; }
+@media (max-width: 540px) {
+  .payment-result { padding: 12px 0 4px; }
+  .payment-result-next { padding: 17px 15px; }
+  .payment-result-description { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .payment-result { animation: none; } }
+/* The preceding booking steps share the payment step's visual language. */
+.booking-step { color: #214434; animation: payment-enter .3s ease both; }
+.booking-step .booking-step-heading { display: block; position: static; background: transparent; border: 0; padding: 0; box-shadow: none; }
+.booking-step-kicker { display: block; margin-bottom: 10px; color: #23805b; font-size: 10px; font-weight: 800; letter-spacing: .14em; }
+.booking-step-heading h3 { margin: 0 0 9px; font-size: clamp(22px,3vw,28px); line-height: 1.3; letter-spacing: -.035em; }
+.booking-step-heading p { margin: 0; color: #6b7e72; font-size: 12px; line-height: 1.7; }
+.booking-step-progress { display: flex; gap: 6px; margin: 20px 0 24px; }
+.booking-step-progress span { height: 4px; flex: 1; border-radius: 9px; background: #e7eee9; }
+.booking-step-progress .is-complete { background: #27865e; }
+.booking-step-progress .is-current { background: #a1d8b8; }
+.booking-section-title { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 700; }
+.booking-section-title > span { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid #dcecdf; border-radius: 8px; background: #edf6f0; color: #28714d; font-size: 11px; }
+.booking-step .pkg-grid { gap: 12px; margin: 15px 0; }
+.booking-step .pkg-card { min-width: 0; border: 1.5px solid #dfe8e2; border-radius: 13px; padding: 20px 12px; background: #fff; color: #738377; line-height: 1.7; font-size: 11px; box-shadow: 0 3px 14px #1a4b2c06; transition: border-color .2s ease,background-color .2s ease,box-shadow .2s ease,transform .2s ease; }
+.booking-step .pkg-card b { color: #31583f; font-size: 14px; margin-bottom: 7px; }
+.booking-step .pkg-card:hover { border-color: #77ad8e; transform: translateY(-2px); }
+.booking-step .pkg-card.selected { border-color: #27835a; background: #f2faf5; box-shadow: 0 0 0 2px #27835a12,0 7px 18px #194e3110; }
+.booking-step .agree-row { align-items: flex-start; gap: 10px; margin: 18px 0; padding: 15px; background: #f2f8f4; border: 1px solid #dfece3; border-radius: 12px; color: #526e5c; font-size: 12px; line-height: 1.7; }
+.booking-step .agree-row input { flex: 0 0 17px; width: 17px; height: 17px; margin: 2px 0 0; accent-color: #187451; }
+.booking-calendar-heading { display: flex; justify-content: space-between; align-items: center; margin: 23px 0 14px; border-top: 1px solid #e5eee8; padding-top: 20px; color: #31583f; font-size: 14px; font-weight: 700; }
+.booking-step button { min-height: 43px; border: 1px solid #d9e6dd; border-radius: 10px; background: #f8fbf9; padding: 10px 14px; color: #526e5b; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.booking-step button:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.booking-step :is(#termsNext,#bfNext) { border-color: #187451; background: #187451; color: white; box-shadow: 0 6px 15px #18745120; }
+.booking-step :is(#termsNext,#bfNext):hover:not(:disabled) { background: #12543e; }
+.booking-step :is(#calPrev,#calNext) { display: grid; place-items: center; width: 36px; min-height: 36px; padding: 0; font-size: 25px; line-height: 1; background: white; }
+.booking-step .booking-calendar-grid { padding: 12px; background: #f8fbf9; border: 1px solid #e1ebe5; border-radius: 14px; gap: 6px; }
+.booking-step .booking-calendar-grid .cal-cell { border: 1px solid transparent; transition: box-shadow .15s ease,transform .15s ease; }
+.booking-step .cal-cell.avail:hover { box-shadow: inset 0 0 0 1px #27835a; }
+.booking-calendar-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 14px 0; color: #748579; font-size: 11px; }
+.booking-step .terms-box { max-height: 340px; padding: 22px; border: 1px solid #dfe9e2; border-radius: 14px; color: #536b5b; background: #f8fbf9; font-size: 12px; line-height: 1.85; scrollbar-width: thin; scrollbar-color: #c4dbcc #f8fbf9; }
+.booking-step .terms-box li { margin-bottom: 12px; padding-left: 4px; }
+.booking-step .terms-box li::marker { color: #308159; font-weight: 700; }
+.booking-step .receipt-container { width: 100%; max-width: none; margin: 0; font: inherit; color: #214434; }
+.booking-step .receipt-row { display: grid; grid-template-columns: minmax(0,220px) minmax(0,1fr); align-items: center; gap: 16px; margin-bottom: 12px; }
+.booking-step .receipt-label { font-size: 11px; line-height: 1.65; font-weight: 600; color: #5c7363; }
+.booking-step .receipt-input, .booking-step .receipt-dots { width: 100%; min-width: 0; min-height: 44px; padding: 11px 13px; border: 1px solid #d8e5dc; border-radius: 10px; background: #fbfdfb; color: #2b503a; font: inherit; font-size: 12px; line-height: 1.6; }
+.booking-step .receipt-input[readonly], .booking-step .receipt-dots { background: #f1f7f3; border-color: #e1ebe4; color: #487456; font-variant-numeric: tabular-nums; }
+.booking-step .receipt-input:focus { outline: none; border-color: #6aa889; box-shadow: 0 0 0 3px #27835a15; }
+.booking-step .receipt-space { height: 1px; background: #e3ece6; margin: 22px 0; }
+.booking-step .receipt-check-dots { display: flex; align-items: center; }
+.booking-step .receipt-check-dots input { width: 17px; height: 17px; accent-color: #187451; }
+.booking-step .receipt-agreement { margin-top: 21px; border: 1px solid #dfece3; border-radius: 12px; background: #f2f8f4; padding: 16px; color: #657d6d; font-size: 11px; line-height: 1.9; }
+.booking-step .receipt-agreement-line { display: inline; width: auto; border: 0; color: #245c3d; font-weight: 700; }
+.booking-step .receipt-error { font-family: inherit; font-size: 12px; border-radius: 10px; }
+.booking-step .receipt-action { width: 100%; min-height: 48px; border-radius: 11px; font-family: inherit; font-size: 13px; }
+@media(max-width:600px) {
+  .booking-step .pkg-grid { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .booking-step .pkg-card { padding: 14px 16px; text-align: left; }
+  .booking-step .pkg-card b { margin-bottom: 3px; }
+  .booking-step .receipt-row { grid-template-columns: minmax(0,1fr); gap: 7px; margin-bottom: 17px; }
+  .booking-step .receipt-input { font-size: 16px; }
+  .booking-step .terms-box { padding: 18px; }
+  .booking-step .booking-calendar-grid { padding: 8px; gap: 4px; }
+}
+@media(prefers-reduced-motion:reduce) { .booking-step { animation: none; } .booking-step .pkg-card { transition: none; } }
+.payment-step { color: #214434; animation: payment-enter .32s ease both; }
+.payment-step .payment-heading { display: block; position: static; padding: 0; border: 0; box-shadow: none; background: transparent; }
+.payment-step-label { display: block; margin-bottom: 10px; font-size: 10px; font-weight: 800; letter-spacing: .14em; color: #23805b; }
+.payment-step .payment-heading h3 { margin: 0 0 9px; font-size: clamp(22px,3vw,28px); line-height: 1.25; letter-spacing: -.035em; }
+.payment-heading p { margin: 0; max-width: 540px; color: #6b7e72; font-size: 13px; line-height: 1.7; }
+.payment-progress { display: flex; gap: 6px; margin: 20px 0 24px; }
+.payment-progress span { height: 4px; flex: 1; background: #27865e; border-radius: 9px; }
+.payment-progress span:last-child { background: #a1d8b8; }
+.payment-summary { display: flex; align-items: center; gap: 14px; padding: 21px; border: 1px solid #d3e8da; border-radius: 17px; background: linear-gradient(125deg,#eff8f2,#e2f0e8); margin-bottom: 26px; }
+.payment-summary-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 13px; background: #fff; color: #1a764e; box-shadow: 0 4px 12px #195b3610; }
+.payment-summary > div > span { display: block; font-size: 11px; color: #5c7968; }
+.payment-summary > div > strong { display: block; margin-top: 4px; font-size: 28px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.payment-summary .payment-contract { margin-left: auto; text-align: right; padding-left: 14px; border-left: 1px solid #cfe0d5; }
+.payment-summary .payment-contract strong { font-size: 16px; letter-spacing: -.02em; }
+.payment-section { margin: 0 0 24px; }
+.payment-section h4 { display: flex; align-items: center; gap: 9px; margin: 0 0 12px; font-size: 14px; color: #244c37; }
+.payment-section-number { display: grid; flex: 0 0 25px; place-items: center; width: 25px; height: 25px; background: #edf6f0; border: 1px solid #dcecdf; border-radius: 8px; color: #28714d; font-size: 11px; }
+.payment-section-copy { margin: -3px 0 14px; font-size: 12px; line-height: 1.7; color: #708176; }
+.payment-step #paymentAmountOptions, .payment-step .ewallet-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 12px 0; }
+.payment-step .pkg-card { position: relative; text-align: left; padding: 17px; border: 1.5px solid #dfe8e2; border-radius: 13px; background: #fff; font: inherit; cursor: pointer; }
+.payment-step .pkg-card b { font-size: 12px; color: #345540; padding-right: 20px; }
+.payment-step .pkg-card > strong { display: block; margin: 8px 0; font-size: 21px; letter-spacing: -.025em; color: #1b4831; font-variant-numeric: tabular-nums; }
+.payment-step .pkg-card > small { display: block; font-size: 10px; color: #7a897e; line-height: 1.6; }
+.payment-choice-indicator { width: 17px; height: 17px; flex: 0 0 17px; border-radius: 50%; border: 1.5px solid #cbdace; background: #fff; display: block; }
+.pkg-card > .payment-choice-indicator { position: absolute; right: 15px; top: 16px; }
+.payment-step .selected .payment-choice-indicator { border: 5px solid #21825a; }
+.payment-step .pkg-card.selected, .payment-step .ewallet-card.selected { border-color: #27835a; background: #f2faf5; box-shadow: 0 0 0 2px #27835a12,0 7px 18px #194e3110; }
+.payment-note { display: flex; align-items: flex-start; gap: 8px; color: #7a806a; font-size: 11px; line-height: 1.7; margin: 12px 0 22px; }
+.payment-note i { padding-top: 3px; color: #8b9a76; }
+.payment-step .ewallet-card { padding: 17px; min-width: 0; border: 1.5px solid #dfe8e2; border-radius: 16px; background: #fff; box-shadow: 0 3px 14px #1a4b2c06; text-align: left; font: inherit; cursor: pointer; }
+.wallet-card-heading { display: flex; align-items: center; gap: 10px; width: 100%; }
+.wallet-card-heading > span:nth-child(2) { flex: 1; }
+.wallet-card-heading b { display: block; font-size: 15px; color: #254937; }
+.wallet-card-heading small { display: block; margin-top: 3px; font-size: 10px; color: #7b8b80; }
+.wallet-wordmark { display: grid; flex: 0 0 37px; place-items: center; width: 37px; height: 37px; border-radius: 11px; font-size: 21px; font-weight: 800; }
+.wallet-gcash { background: #ebf2ff; color: #1762d7; }
+.wallet-maribank { background: #fff1e9; color: #bd5a20; }
+.payment-step .qr-box { width: min(176px,100%); margin: 20px auto 16px; border: 1px solid #e3ebe5; background: white; padding: 7px; border-radius: 12px; box-shadow: 0 3px 12px #164a2810; }
+.payment-step .qr-box img { border-radius: 0; }
+.wallet-recipient-label { display: block; margin-top: 3px; font-size: 8px; font-weight: 800; letter-spacing: .1em; color: #7a8b7e; }
+.payment-step .payment-recipient { display: block; min-height: 40px; margin-top: 5px; font-size: 11px; line-height: 1.7; color: #395441; overflow-wrap: anywhere; }
+.wallet-select-hint { display: flex; justify-content: space-between; border-top: 1px solid #e4eee6; margin-top: 10px; padding-top: 12px; color: #25754f; font-size: 11px; font-weight: 700; }
+.payment-step .payment-help { border: 1px solid #e1eae4; border-radius: 10px; padding: 12px 14px; background: #f5f8f6; color: #667c6e; font-size: 11px; line-height: 1.8; }
+.payment-proof-section { border-top: 1px solid #e4ece7; padding-top: 22px; animation: payment-enter .28s ease both; }
+.payment-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.payment-field { min-width: 0; }
+.payment-field-wide { grid-column: 1 / -1; }
+.payment-step .payment-field label { display: block; font-size: 11px; font-weight: 700; color: #496653; margin: 0 0 7px; }
+.payment-step .payment-field input { width: 100%; min-height: 46px; border: 1px solid #d8e5dc; border-radius: 10px; background: #fbfdfb; padding: 11px 13px; font: inherit; font-size: 13px; color: #264e38; }
+.payment-upload { display: flex; align-items: center; flex-direction: column; gap: 8px; padding: 22px 16px; margin: 18px 0; background: #f6faf7; border: 1.5px dashed #bed7c6; border-radius: 13px; text-align: center; }
+.payment-upload-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: #e6f2ea; color: #27825a; }
+.payment-upload label { font-size: 12px; font-weight: 700; color: #3b6249; cursor: pointer; }
+.payment-upload > span:not(.payment-upload-icon) { font-size: 10px; color: #7b8f80; }
+.payment-upload input { width: 100%; margin-top: 7px; font-size: 11px; color: #597160; }
+.payment-upload input::file-selector-button { border: 1px solid #c9ddcf; border-radius: 7px; padding: 9px 12px; background: white; color: #276041; margin-right: 10px; cursor: pointer; }
+.payment-step .payment-submit { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 48px; border: 0; border-radius: 11px; background: #187451; color: #fff; font: inherit; font-size: 13px; font-weight: 700; box-shadow: 0 6px 15px #18745120; cursor: pointer; }
+.payment-step .payment-submit:hover { background: #12543e; }
+.payment-review-note { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 11px; font-size: 10px; color: #819084; line-height: 1.6; text-align: center; }
+.payment-error { padding: 12px; margin-bottom: 12px; border: 1px solid #efcecb; border-radius: 10px; background: #fff4f2; color: #9a2f2f; font-size: 12px; line-height: 1.6; }
+.payment-footer { display: flex; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid #e4ece7; }
+.payment-step .payment-footer button { min-height: 40px; background: white; border: 1px solid #d9e6dd; border-radius: 9px; padding: 10px 15px; color: #526e5b; font: inherit; font-size: 12px; cursor: pointer; }
+.payment-step .payment-footer .payment-cancel { border-color: transparent; color: #7f8e83; }
+.payment-step :is(.pkg-card,.ewallet-card) { transition: border-color .2s ease,background-color .2s ease,box-shadow .2s ease,transform .2s ease; }
+.payment-step :is(.pkg-card,.ewallet-card):hover { transform: translateY(-2px); border-color: #77ad8e; }
+@keyframes payment-enter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@media(max-width:540px) {
+  .payment-step .ewallet-grid, .payment-fields { grid-template-columns: minmax(0,1fr); }
+  .payment-step .pkg-card { padding: 14px 11px; }
+  .payment-step .pkg-card b { font-size: 11px; }
+  .payment-step .pkg-card > strong { font-size: 19px; }
+  .payment-choice-indicator { width: 14px; height: 14px; flex-basis: 14px; }
+  .pkg-card > .payment-choice-indicator { right: 9px; top: 15px; }
+  .payment-summary { gap: 10px; padding: 16px 12px; flex-wrap: wrap; }
+  .payment-summary > div > strong { font-size: 25px; }
+  .payment-summary .payment-contract { width: 100%; margin: 2px 0 0; border: 0; border-top: 1px solid #d4e5d9; padding: 12px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .payment-summary .payment-contract strong { font-size: 14px; margin: 0; }
+  .payment-step .payment-field input { font-size: 16px; }
+}
+@media(prefers-reduced-motion:reduce) { .payment-step, .payment-proof-section { animation: none; } .payment-step :is(.pkg-card,.ewallet-card) { transition: none; } }

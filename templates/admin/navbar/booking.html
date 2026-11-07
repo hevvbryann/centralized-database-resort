@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts — Booking</title>
+<link rel="stylesheet" href="{{url_for('static', filename='css/admin_style/admin.css')}}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
+<script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="owner-ui">
+
+<!--
+  NOTES FOR THIS PAGE (booking.html)
+  --------------------------------------------------
+  Top-nav-only page (no matching sidebar item — sidebar falls back
+  to no active state, or you can map it to 'Reservation' if you'd
+  rather treat them as the same feature).
+
+  All pages share styles.css — do not fork styles per page.
+  Sidebar / top nav links are plain <a href="..."> pointing at
+  the sibling .html files, so this works as static prototype
+  files opened directly in a browser, or dropped into a real
+  app's templates folder later.
+-->
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  {% include 'admin/_sidebar.html' %}
+
+  <!-- MAIN -->
+  <div class="main">
+    {% include 'admin/_header.html' %}
+
+    <div class="content">
+      <h1 class="page-title">Booking</h1>
+      <p class="page-sub">Create and manage a new guest booking</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>New Booking</h3>
+          <div class="form-row"><label>Guest Name</label><input placeholder="e.g. Juan Dela Cruz"></div>
+          <div class="form-row"><label>Resort</label><select><option>Sunscape Resort</option><option>Triple Z Resort</option></select></div>
+          <div class="form-cols">
+            <div class="form-row"><label>Check-in</label><input type="date"></div>
+            <div class="form-row"><label>Check-out</label><input type="date"></div>
+          </div>
+          <div class="form-row"><label>Number of Guests</label><input type="number" value="2"></div>
+          <button class="btn btn-primary">Create Booking</button>
+        </div>
+        <div class="card">
+          <h3>Upcoming Bookings</h3>
+          <table>
+            <thead><tr><th>Guest</th><th>Resort</th><th>Dates</th></tr></thead>
+            <tbody>
+              <tr><td>Maria Santos</td><td>Sunscape</td><td>Aug 29-31</td></tr>
+              <tr><td>Carlo Reyes</td><td>Triple Z</td><td>Sep 2-3</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% include 'admin/_owner_navigation.html' %}
+</body>
+</html>

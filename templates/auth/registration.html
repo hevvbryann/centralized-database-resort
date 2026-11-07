@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registration | Pansol Resorts</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<script src="{{ url_for('static', filename='js/registration.js') }}" defer></script>
+</head>
+
+<body class="auth-registration">
+
+<div class="container">
+
+    <!-- ================= LEFT PANEL ================= -->
+
+    <div class="left-panel">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143">
+        </div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Create Your Account</h1>
+
+            <p>
+                Join Pansol Resorts and start exploring amazing resorts.
+            </p>
+        </div>
+
+        <!-- STEPS -->
+        <div class="steps">
+
+            <div class="step active">
+                <div class="circle">1</div>
+                <span>Account Info</span>
+            </div>
+
+            <div class="arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+            <div class="step">
+                <div class="circle">2</div>
+                <span>Verification</span>
+            </div>
+
+            <div class="arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+            <div class="step">
+                <div class="circle">3</div>
+                <span>Completed</span>
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="form-messages" role="alert" aria-live="assertive">
+            {% for category, message in messages %}
+            <p class="form-message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form id="registration-form" action="{{ url_for('verification') }}" method="POST">
+            <div id="registration-feedback" role="alert" tabindex="-1" hidden></div>
+
+            <!-- REGISTER AS -->
+
+            <h4>I am registering as</h4>
+
+            <div class="account-type">
+
+                <label class="card">
+
+                    <input type="radio" name="role" value="customer" checked>
+
+                    <div class="icon">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+
+                    <div>
+                        <h3>Customer</h3>
+
+                        <p>
+                            I want to book for myself and my family.
+                        </p>
+                    </div>
+
+                </label>
+
+            </div>
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="register-fullname">Full Name</label>
+
+                <input 
+                    type="text"
+                    name="fullname" value="{{ (form_values|default({})).get('fullname', '') }}" id="register-fullname" autocomplete="name"
+                    placeholder="Enter your Full Name"
+                    required>
+
+            </div>
+
+
+            <!-- EMAIL PHONE -->
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label for="register-email">Email Address</label>
+
+                    <input
+                        type="email"
+                        name="email" value="{{ (form_values|default({})).get('email', '') }}" id="register-email" autocomplete="email"
+                        placeholder="Enter your Email"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="register-phone">Phone Number</label>
+
+                    <div class="phone">
+
+                        <span>+63</span>
+
+                        <input
+                            type="text"
+                            name="phone" value="{{ (form_values|default({})).get('phone', '') }}" id="register-phone" autocomplete="tel"
+                            placeholder="Enter your Number"
+                            required>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="password-checklist" aria-live="polite">
+
+                <p class="password-checklist-title">Password requirements</p>
+
+                <ul>
+                    <li data-rule="length">
+                        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                        <span>At least 8 characters</span>
+                    </li>
+                    <li data-rule="lowercase">
+                        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                        <span>At least one lowercase letter</span>
+                    </li>
+                    <li data-rule="uppercase">
+                        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                        <span>At least one uppercase letter</span>
+                    </li>
+                    <li data-rule="number">
+                        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                        <span>At least one number</span>
+                    </li>
+                    <li data-rule="special">
+                        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                        <span>At least one special character</span>
+                    </li>
+                    <li data-rule="match">
+                        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                        <span>Passwords match</span>
+                    </li>
+                </ul>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label for="register-password">Password</label>
+
+                    <input
+                        type="password"
+                        name="password" id="register-password" autocomplete="new-password"
+                        placeholder="Enter Password"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="register-confirm_password">Confirm Password</label>
+
+                    <input
+                        type="password"
+                        name="confirm_password" id="register-confirm_password" autocomplete="new-password"
+                        placeholder="Re-enter Password"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <!-- TERMS -->
+
+            <div class="checkbox">
+
+                <input type="checkbox" id="register-consent" required>
+
+                <label for="register-consent">
+                    I agree to the
+                    <a href="{{ url_for('index', _anchor='terms') }}" target="_blank" rel="noopener">Terms and Conditions</a>
+                    and
+                    <a href="{{ url_for('index', _anchor='privacy') }}" target="_blank" rel="noopener">Privacy Policy</a>
+                </label>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button type="submit" class="btn">
+                Continue
+            </button>
+
+        </form>
+
+
+        <div class="login">
+
+            Already have an account?
+
+            <a href="{{ url_for('login') }}">
+                Log In
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RIGHT PANEL ================= -->
+
+    <div class="right-panel">
+
+        <img
+            src="{{ url_for('static', filename='images/side_panel.png') }}"
+            alt="Resort">
+        <div class="registration-welcome"><span>YOUR NEXT ESCAPE STARTS HERE</span><h2>Make room for<br>great memories.</h2><p>Create your account and discover your next stay in Pansol.</p></div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+</body>
+
+</html>

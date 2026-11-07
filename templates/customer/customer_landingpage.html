@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts | Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src={{ url_for('static', filename='images/logo.png') }} alt="Logo" style="width: 220px; height: auto;" width="473" height="143"></a>
+    </div>
+
+    {% include 'customer/_sidebar_nav.html' %}
+
+    <a class="logout" href="{{ url_for('logout') }}"
+    style="margin-left:0px;
+    display:flex;
+    align-items:center;
+    margin-top: 130%;
+    color:#fff;
+    text-decoration:none;
+    opacity:.9;
+      "> &#8592; Log Out</a>
+  </aside>
+
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOP NAV -->
+    <header class="topbar">
+
+      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src={{ url_for('static', filename='images/logo.png') }} alt="Logo" width="473" height="143"></a>
+      </div>
+
+      <nav class="topbar-links">
+        <a href="/customer_landingpage">Home</a>
+        <a href="/customer_aboutpage">About</a>
+        <a href="/resorts">Resorts</a>
+        <a href="/customer_howitworks">How it Works</a>
+      </nav>
+
+      {% include 'customer/_header_actions.html' %}
+
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content dashboard-content">
+      <section class="dashboard-heading">
+        <div>
+          <p class="eyebrow">YOUR RESORT GETAWAY, AT A GLANCE</p>
+          <h1>Welcome back, {{ username }}!</h1>
+          <p class="subtitle">Manage your stays, payments, and upcoming plans.</p>
+        </div>
+      </section>
+
+      <section class="booking-search-panel" aria-labelledby="booking-search-title">
+        <div class="booking-search-copy">
+          <span class="search-kicker"><i class="fa-solid fa-sparkles"></i> YOUR NEXT GETAWAY STARTS HERE</span>
+          <h2 id="booking-search-title">Find your stay in Pansol</h2>
+          <p>Compare all our partner resorts in one place and choose the stay that works for you.</p>
+        </div>
+        <a class="dashboard-search-link" href="{{ url_for('resorts') }}">
+          <span class="search-location-icon"><i class="fa-solid fa-location-dot"></i></span>
+          <span class="search-link-copy"><strong>Explore resorts in Pansol</strong><small>View resorts, amenities, prices, and available dates</small></span>
+          <span class="search-link-button"><i class="fa-solid fa-magnifying-glass"></i> Browse stays</span>
+        </a>
+        <div class="search-benefits"><span><i class="fa-solid fa-check"></i> All partner resorts in one place</span><span><i class="fa-solid fa-check"></i> Check availability</span><span><i class="fa-solid fa-check"></i> Book in a few steps</span></div>
+      </section>
+
+      <section class="panel" style="margin:22px 0;">
+        <div class="panel-heading">
+          <div><p class="eyebrow">CUSTOMER FAVORITES</p><h2>Top-performing resorts</h2></div>
+          <a href="{{ url_for('resorts') }}" class="text-action">View all resorts <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <p class="subtitle">Ranked by verified guest ratings, with completed stays as a tie-breaker.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;">
+          {% for resort in top_performing_resorts %}
+          <article style="border:1px solid #e1ebe4;border-radius:12px;overflow:hidden;background:#fff;">
+            <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}"
+                 alt="{{ resort.resort_name }} resort" loading="lazy"
+                 style="display:block;width:100%;height:160px;object-fit:cover;background:#edf3ef;">
+            <div style="padding:16px;">
+              <h3 style="margin:0 0 8px;">{{ resort.resort_name }}</h3>
+              <p style="margin:0 0 8px;color:#68776d;">{{ resort.address or 'Pansol, Laguna' }}</p>
+              <p style="margin:0 0 14px;color:#176b46;font-weight:700;">
+                {% if resort.review_count %}★ {{ '%.1f'|format(resort.average_rating) }} · {{ resort.review_count }} review{{ '' if resort.review_count == 1 else 's' }}{% else %}New resort · Be the first to review{% endif %}
+                {% if resort.completed_stays %}<span style="display:block;color:#68776d;font-size:13px;font-weight:400;">{{ resort.completed_stays }} completed stay{{ '' if resort.completed_stays == 1 else 's' }}</span>{% endif %}
+              </p>
+              {% if resort.price is not none %}<p style="margin:0 0 12px;">From ₱{{ '{:,.2f}'.format(resort.price) }}{% if resort.max_pax %} · Up to {{ resort.max_pax }} guests{% endif %}</p>{% endif %}
+{% include 'customer/_resort_rates.html' %}
+              <a class="secondary-action" href="{{ url_for('resorts', resort_id=resort.resort_id) }}">Explore &amp; book</a>
+            </div>
+          </article>
+          {% else %}
+          <p>There are no active resorts to show right now.</p>
+          {% endfor %}
+        </div>
+      </section>
+
+      <!-- BOTTOM PANELS -->
+      <section class="panels">
+
+        <!-- UPCOMING RESERVATIONS -->
+        <div class="panel">
+
+          <div class="panel-heading"><div><p class="eyebrow">PLAN AHEAD</p><h2>Upcoming stays</h2></div><a href="{{ url_for('customer_reservation') }}" class="text-action">All reservations <i class="fa-solid fa-arrow-right"></i></a></div>
+
+          <div class="reservations-container">
+
+              {% if upcoming_reservations %}
+
+                  {% for reservation in upcoming_reservations %}
+
+                  <div class="reservation-card">
+                      <div class="stay-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+                      <div class="stay-details">
+                      <div class="stay-title"><h3>{{ reservation.resort_name }}</h3>
+                        <span class="badge status-{{ reservation.reservation_status|lower }}">{{ reservation.reservation_status }}</span>
+                      </div>
+
+                      <p class="stay-dates"><i class="fa-regular fa-calendar"></i> {% if reservation.start_at and reservation.end_at %}{{ reservation.start_at.strftime('%b %d, %Y at %I:%M %p') }} <span>→</span> {{ reservation.end_at.strftime('%b %d, %Y at %I:%M %p') }}{% else %}{{ reservation.check_in.strftime('%b %d, %Y') if reservation.check_in else 'Date pending' }} <span>→</span> {{ reservation.check_out.strftime('%b %d, %Y') if reservation.check_out else '' }}{% endif %}</p>
+
+                      <p class="stay-meta">{{ reservation.guests }} guests <span>·</span> Booking #{{ reservation.reservation_id }}{% if reservation.created_at %}<span>·</span> Booked {{ reservation.created_at.strftime('%b %d, %Y at %I:%M %p') }}{% endif %}</p>
+
+                      <p>
+                          ₱{{ "{:,.2f}".format(reservation.total_amount) }}
+                      </p>
+
+                      </div>
+                      <div class="stay-amount"><strong>₱{{ "{:,.2f}".format(reservation.total_amount or 0) }}</strong><span>{{ reservation.payment_status or 'Payment not submitted' }}</span></div>
+                  </div>
+                  {% endfor %}
+              {% else %}
+                  <div class="empty-bookings"><span class="empty-icon"><i class="fa-regular fa-calendar-check"></i></span><h3>Your next getaway starts here</h3><p>You don’t have an upcoming stay yet. Browse resorts and find a place for your next trip.</p><a class="secondary-action" href="{{ url_for('resorts') }}">Browse resorts <i class="fa-solid fa-arrow-right"></i></a></div>
+              {% endif %}
+          </div>
+
+          <a href="{{ url_for('customer_reservation') }}" class="view-all">View All Reservations</a>
+
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="panel">
+
+          <div class="panel-heading"><div><p class="eyebrow">YOUR BOOKINGS</p><h2>Recent activity</h2></div></div>
+
+          <div class="recent-activity">
+
+            {% if recent_reservations %}
+
+                {% for reservation in recent_reservations %}
+
+                <article class="activity-item">
+                  <span class="activity-icon"><i class="fa-solid fa-receipt"></i></span>
+                  <div class="activity-copy"><strong>{{ reservation.resort_name }}</strong><p>Reservation {{ reservation.reservation_status|lower }}</p><small>{{ reservation.created_at.strftime('%b %d, %Y at %I:%M %p') if reservation.created_at else '' }}</small></div>
+                  <span class="badge status-{{ reservation.reservation_status|lower }}">{{ reservation.reservation_status }}</span>
+                </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-activity"><i class="fa-regular fa-folder-open"></i><p>Your booking updates will appear here.</p></div>
+
+            {% endif %}
+
+        </div>
+
+          <a href="{{ url_for('customer_reservation') }}" class="view-all">View All Activity</a>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

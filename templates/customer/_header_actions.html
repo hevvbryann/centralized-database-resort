@@ -1,0 +1,14 @@
+<div class="topbar-user">
+  <a class="notification-destination" href="{{ url_for('customer_messages') }}" aria-label="Notifications and updates" title="Notifications and updates">
+    <i class="fa-regular fa-bell" aria-hidden="true"></i>
+  </a>
+  <a class="profile-destination" href="{{ url_for('customer_profileSetting') }}" aria-label="Profile settings" title="Profile settings">
+    {% set header_photo = profile_photo|default(session.get('profile_photo'), true) %}
+    {% if header_photo %}
+      <img class="avatar" src="{{ header_photo }}" alt="" style="object-fit:cover;">
+    {% else %}
+      <span class="avatar" aria-hidden="true">{{ session.get('fullname', 'U')[:1]|upper }}</span>
+    {% endif %}
+    <span class="profile-name">{{ username|default(session.get('fullname', 'Guest'), true) }}</span>
+  </a>
+</div>

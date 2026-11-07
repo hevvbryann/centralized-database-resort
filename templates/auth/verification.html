@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/verification.css') }}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/verification_ui.css') }}">
+</head>
+<body class="auth-verification">
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="473" height="143">
+            <div>
+                <h3>PANSOL RESORTS</h3>
+                <p>Reservation System</p>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress">
+
+            <div class="step active">
+                <div class="circle">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <span>Account Info</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step">
+                <div class="circle">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <span>Verification</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step">
+                <div class="circle">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <span>Completed</span>
+            </div>
+
+        </div>
+
+        <div class="content">
+
+            <div class="icon">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <h2>Verify your Email</h2>
+
+            <p>
+                Please verify your email address to continue.
+            </p>
+
+            <div class="notice">
+                <i class="fa-solid fa-circle-info"></i>
+                A verification code will be sent to your registered email address.
+            </div>
+
+            <form action="{{ url_for('send_otp') }}" method="POST">
+
+                <div class="method active">
+
+                    <div class="left">
+                            <i class="fa-solid fa-envelope"></i>
+
+                        <div>
+                            <h4>Email Verification</h4>
+                            <small>Receive the OTP in your email inbox</small>
+                        </div>
+
+                    </div>
+
+                    <input type="radio"
+                           name="method"
+                           value="email"
+                           checked>
+
+                </div>
+
+                <button type="submit">
+                    Send email code
+                </button>
+
+            </form>
+
+            <div class="footer">
+                We only use your email to verify your account.
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+
+    <div class="right-panel"><div class="verification-welcome"><span>YOUR NEXT ESCAPE STARTS HERE</span><h2>Almost there.<br>Your getaway awaits.</h2><p>Verify your email to finish setting up your Pansol Resorts account.</p></div>
+        <img src="{{ url_for('static', filename='images/side_panel.png') }}" alt="">
+    </div>
+
+</div>
+
+
+
+</body>
+</html>

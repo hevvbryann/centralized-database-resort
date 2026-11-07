@@ -1,0 +1,158 @@
+from datetime import date, datetime, timedelta
+
+from flask import render_template, request, redirect, url_for, session, flash
+from app import app
+from config import get_connection
+from models.decorators import role_required
+from models.notifications import notify_resort_caretakers
+from models.file_storage import file_url
+
+
+@app.route('/admin/payments')
+@role_required("owner")
+def admin_payments():
+    month_start = date.today().replace(day=1)
+    next_month = (month_start.replace(day=28) + timedelta(days=4)).replace(day=1)
+    start_date_text = request.args.get("start_date", month_start.isoformat())
+    end_date_text = request.args.get("end_date", (next_month - timedelta(days=1)).isoformat())
+    try:
+        start_date = datetime.strptime(start_date_text, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date_text, "%Y-%m-%d").date()
+        if end_date < start_date:
+            raise ValueError
+    except ValueError:
+        start_date = month_start
+        end_date = next_month - timedelta(days=1)
+        start_date_text = start_date.isoformat()
+        end_date_text = end_date.isoformat()
+    end_date_exclusive = end_date + timedelta(days=1)
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT
+                p.payment_id, p.proof_of_payment, p.reference_number, p.amount_paid,
+                p.payment_status, p.payment_date, p.payment_method, p.payer_name, p.payer_phone,
+                r.reservation_id, COALESCE(r.guest_name, a.fullname) AS guest_name,
+                COALESCE(NULLIF(r.guest_phone, ''), c.phone) AS guest_phone, r.check_in, r.check_out,
+                res.resort_name
+            FROM payments p
+            JOIN reservations r ON p.reservation_id = r.reservation_id
+            JOIN customers c ON r.customer_id = c.customer_id
+            JOIN accounts a ON c.account_id = a.account_id
+            JOIN resorts res ON r.resort_id = res.resort_id
+            WHERE p.payment_date >= %s AND p.payment_date < %s
+            ORDER BY p.payment_date DESC
+        """, (start_date, end_date_exclusive))
+        payments = cursor.fetchall()
+        for payment in payments:
+            payment["proof_url"] = file_url(payment["proof_of_payment"]) if payment["proof_of_payment"] else None
+
+        cursor.execute(
+            """
+            SELECT
+                COALESCE(SUM(CASE WHEN p.payment_status = 'Verified' THEN p.amount_paid ELSE 0 END), 0) AS collected,
+                COALESCE(SUM(CASE WHEN p.payment_status = 'Pending' THEN p.amount_paid ELSE 0 END), 0) AS pending,
+                COUNT(CASE WHEN p.payment_status = 'Pending' THEN 1 END) AS pending_count,
+                COALESCE(SUM(CASE WHEN p.payment_status = 'Rejected' THEN p.amount_paid ELSE 0 END), 0) AS rejected,
+                COUNT(CASE WHEN p.payment_status = 'Rejected' THEN 1 END) AS rejected_count,
+                COUNT(CASE WHEN p.payment_status = 'Verified' THEN 1 END) AS verified_count
+            FROM payments p
+            JOIN reservations r ON p.reservation_id = r.reservation_id
+            JOIN resorts res ON r.resort_id = res.resort_id
+                        WHERE p.payment_date >= %s AND p.payment_date < %s
+            """,
+                        (start_date, end_date_exclusive),
+        )
+        summary = cursor.fetchone()
+        return render_template(
+            "admin/sidebar/payment.html",
+            payments=payments,
+            summary=summary,
+            username=session.get("fullname", "Owner"),
+            start_date=start_date_text,
+            end_date=end_date_text,
+        )
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/admin/payments/verify/<int:payment_id>', methods=['POST'])
+@role_required("owner")
+def verify_payment(payment_id):
+    action = request.form.get('action')
+    if action not in {'verify', 'reject'}:
+        flash("Invalid payment review action.", "warning")
+        return redirect(url_for('admin_payments'))
+    new_status = 'Verified' if action == 'verify' else 'Rejected'
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT r.resort_id, r.reservation_id, r.check_in, r.check_out,
+                   r.reservation_status, r.customer_decision, p.payment_status
+            FROM payments p JOIN reservations r ON r.reservation_id = p.reservation_id
+            WHERE p.payment_id = %s
+            FOR UPDATE
+        """, (payment_id,))
+        booking = cursor.fetchone()
+        if not booking:
+            return redirect(url_for('admin_payments'))
+        if booking["reservation_status"] != "Pending" or booking["payment_status"] != "Pending":
+            flash("This reservation or payment is no longer pending review.", "warning")
+            return redirect(url_for('admin_payments'))
+        if action == "verify" and booking["customer_decision"] != "Continue":
+            flash("The customer must confirm they want to continue before approval.", "warning")
+            return redirect(url_for('admin_payments'))
+        if action == "verify":
+            cursor.execute(
+                """
+                SELECT reservation_id FROM reservations
+                WHERE resort_id = %s AND reservation_status = 'Confirmed'
+                  AND check_in < %s AND check_out > %s
+                LIMIT 1 FOR UPDATE
+                """,
+                (booking["resort_id"], booking["check_out"], booking["check_in"]),
+            )
+            if cursor.fetchone():
+                conn.rollback()
+                flash("Cannot approve: these dates have already been approved for another customer.", "warning")
+                return redirect(url_for('admin_payments'))
+        cursor.execute(
+            """
+            UPDATE payments p
+            JOIN reservations r ON p.reservation_id = r.reservation_id
+            JOIN resorts res ON r.resort_id = res.resort_id
+            SET p.payment_status = %s
+            WHERE p.payment_id = %s
+            """,
+            (new_status, payment_id)
+        )
+        if action == 'verify':
+            cursor.execute("""
+                UPDATE reservations r
+                JOIN payments p ON r.reservation_id = p.reservation_id
+                JOIN resorts res ON r.resort_id = res.resort_id
+                SET r.reservation_status = 'Confirmed'
+                WHERE p.payment_id = %s
+            """, (payment_id,))
+            notify_resort_caretakers(
+                cursor,
+                booking["resort_id"],
+                "Reservation approved by the owner",
+                f"The owner approved reservation #RSV-{booking['reservation_id']} ({booking['check_in']} to {booking['check_out']}).",
+                "reservation_owner_approved",
+            )
+            cursor.execute("""
+                INSERT INTO notifications (account_id, title, message, type)
+                SELECT c.account_id, 'Reservation approved', %s, 'reservation_approved'
+                FROM reservations r JOIN customers c ON c.customer_id = r.customer_id
+                WHERE r.reservation_id = %s
+            """, (f"Your reservation #RSV-{booking['reservation_id']} has been approved by the owner.", booking["reservation_id"]))
+        conn.commit()
+        return redirect(url_for('admin_payments'))
+    finally:
+        cursor.close()
+        conn.close()

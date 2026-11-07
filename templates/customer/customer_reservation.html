@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pansol Resorts | My Reservation</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 220px; height: auto;" width="473" height="143"></a>
+    </div>
+
+    {% include 'customer/_sidebar_nav.html' %}
+
+    <a class="logout" href="{{ url_for('logout') }}"
+    style="margin-left:0px;
+    display:flex;
+    align-items:center;
+    margin-top: 130%;
+    color:#fff;
+    text-decoration:none;
+    opacity:.9;
+      "> &#8592; Log Out</a>
+  </aside>
+
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOP NAV -->
+    <header class="topbar">
+
+      <div class="logo"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="473" height="143"></a>
+      </div>
+
+      <nav class="topbar-links">
+        <a href="/customer_landingpage">Home</a>
+        <a href="/customer_aboutpage">About</a>
+        <a href="/resorts">Resorts</a>
+        <a href="/customer_howitworks">How it Works</a>
+      </nav>
+
+      {% include 'customer/_header_actions.html' %}
+
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <h1>My Reservation</h1>
+      <p class="subtitle">All of your bookings across every partner resort, in one place.</p>
+
+      {% for notification in notifications %}
+        <div class="alert alert-success" style="margin-top:12px;">
+          <strong>{{ notification.title }}</strong><br>
+          {{ notification.message }}
+        </div>
+      {% endfor %}
+
+      <div class="panel" style="margin-top:20px;">
+        <h3>Booking History</h3>
+        <p class="subtitle" style="margin-bottom:16px;">{{ reservations|length }} total booking{{ '' if reservations|length == 1 else 's' }}</p>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Resort</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Booked at</th>
+                <th>Guests</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Continue?</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in reservations %}
+              <tr>
+                <td><strong>{{ r.resort_name }}</strong></td>
+                <td>{{ r.start_at.strftime('%b %d, %Y at %I:%M %p') if r.start_at else (r.check_in.strftime('%b %d, %Y') if r.check_in else '—') }}</td>
+                <td>{{ r.end_at.strftime('%b %d, %Y at %I:%M %p') if r.end_at else (r.check_out.strftime('%b %d, %Y') if r.check_out else '—') }}</td>
+                <td>{{ r.created_at.strftime('%b %d, %Y at %I:%M %p') if r.created_at else '—' }}</td>
+                <td>{{ r.guests }}</td>
+                <td>₱{{ '%.2f'|format(r.total_amount) if r.total_amount else '0.00' }}</td>
+                <td><span class="badge {{ r.reservation_status|lower }}">{{ r.reservation_status }}</span></td>
+                <td>
+                  {% if r.reservation_status == 'Pending' and r.customer_decision == 'Pending' %}
+                    <form class="customer-decision-actions" method="post" action="{{ url_for('customer_reservation_decision', reservation_id=r.reservation_id) }}">
+                      <button class="continue" type="submit" name="decision" value="continue">Yes, continue</button>
+                      <button class="cancel" type="submit" name="decision" value="cancel" data-system-confirm="The dates will be available to other customers after cancellation.">No, cancel</button>
+                    </form>
+                  {% elif r.reservation_status == 'Pending' and r.customer_decision == 'Continue' %}
+                    <span class="badge confirmed">Waiting for resort approval</span>
+                    <form class="customer-decision-actions" method="post" action="{{ url_for('customer_reservation_decision', reservation_id=r.reservation_id) }}">
+                      <button class="cancel" type="submit" name="decision" value="cancel" data-system-confirm="The dates will be available to other customers after cancellation.">Cancel reservation</button>
+                    </form>
+                  {% elif r.reservation_status == 'Confirmed' %}
+                    <span class="badge confirmed">Confirmed</span>
+                  {% elif r.reservation_status == 'Rejected' %}
+                    <span class="badge rejected">Not approved</span>
+                  {% elif r.reservation_status == 'Cancelled' or r.customer_decision == 'Cancelled' %}
+                    <span class="badge cancelled">Cancelled</span>
+                  {% else %}
+                    <span>{{ r.customer_decision or 'Pending' }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="8"><div class="empty-state">You don't have any reservations yet.</div></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+
+</body>
+</html>

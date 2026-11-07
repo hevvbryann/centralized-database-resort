@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pansol Resorts | Saved Resorts</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/customer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><a class="brand-destination" href="{{ url_for('customer_dashboard') }}" aria-label="Dashboard"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a></div>
+    {% include 'customer/_sidebar_nav.html' %}
+    <a class="logout" href="{{ url_for('logout') }}">Log out</a>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <a class="logo" href="{{ url_for('customer_dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts" width="473" height="143"></a>
+      <nav class="topbar-links">
+        <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('resorts') }}">Resorts</a>
+        <a href="{{ url_for('customer_reservation') }}">My reservations</a>
+        <a href="{{ url_for('customer_messages') }}">Updates</a>
+      </nav>
+      {% include 'customer/_header_actions.html' %}
+    </header>
+    <main class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}<div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">{{ message }}</div>{% endfor %}
+      {% endwith %}
+      <div class="customer-page-heading">
+        <div><p class="eyebrow">YOUR SHORTLIST</p><h1>Saved resorts</h1><p class="subtitle">Keep the places you like close while you plan your stay.</p></div>
+        <a class="primary-action" href="{{ url_for('resorts') }}"><i class="fa-solid fa-magnifying-glass"></i> Explore resorts</a>
+      </div>
+      {% if favorites %}
+      <section class="customer-resort-grid" aria-label="Your saved resorts">
+        {% for resort in favorites %}
+        <article class="customer-resort-card">
+          <a class="customer-resort-image" href="{{ url_for('resorts') }}" aria-label="Explore {{ resort.resort_name }}">
+            <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}">
+          </a>
+          <div class="customer-resort-body">
+            <p class="customer-resort-location"><i class="fa-solid fa-location-dot"></i> {{ resort.address or 'Pansol, Calamba, Laguna' }}</p>
+            <h2>{{ resort.resort_name }}</h2>
+            <p class="customer-resort-description">{{ resort.description or 'View resort details, amenities, and available dates.' }}</p>
+            {% include 'customer/_resort_rates.html' %}
+<div class="customer-resort-footer">
+              <div><small>Starting price</small><strong>{% if resort.price %}₱{{ '{:,.2f}'.format(resort.price|float) }}{% else %}See resort details{% endif %}</strong></div>
+              <form method="post" action="{{ url_for('toggle_customer_favorite', resort_id=resort.resort_id) }}">
+                <button class="icon-action" type="submit" aria-label="Remove {{ resort.resort_name }} from saved resorts"><i class="fa-solid fa-heart"></i></button>
+              </form>
+            </div>
+            <a class="secondary-action customer-resort-link" href="{{ url_for('resorts') }}">View resort details <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
+      {% else %}
+      <section class="panel customer-empty-state">
+        <span class="empty-icon"><i class="fa-regular fa-heart"></i></span>
+        <h2>Your shortlist is ready</h2>
+        <p>Save resorts from the resort directory and they’ll appear here for your next visit.</p>
+        <a class="primary-action" href="{{ url_for('resorts') }}">Browse available resorts <i class="fa-solid fa-arrow-right"></i></a>
+      </section>
+      {% endif %}
+    </main>
+  </div>
+</div>
+
+
+</body>
+</html>

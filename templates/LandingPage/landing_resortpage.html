@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Resorts | Pansol Resorts</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing_resortpage.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/resort_index.css') }}">
+  <style>
+    .auth-buttons a { text-decoration:none; color:inherit; }
+    .description { color:var(--gray); font-size:13px; line-height:1.5; margin:0 0 12px; }
+    .tag { overflow-wrap:anywhere; }
+    .btn-select { text-decoration:none; white-space:nowrap; }
+    .empty-state { grid-column:1/-1; text-align:center; color:var(--gray); padding:40px 12px; }
+    .resort-card[hidden] { display:none; }
+  </style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+<script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <img class="brand-image" src="{{ url_for('static', filename='images/logo.png') }}" alt="Pansol Resorts — Centralized Reservation Hub" width="473" height="143">
+  </div>
+  <nav>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('landing_resortpage') }}" class="active">Resorts</a>
+    <a href="{{ url_for('howitworks') }}">How it Works</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+  </nav>
+  <div class="auth-buttons">
+    <a class="btn-outline" href="{{ url_for('login') }}">Log In</a>
+    <a class="btn-outline" href="{{ url_for('registration') }}">Register</a>
+  </div>
+</header>
+
+<div class="page-header">
+  <h1>Explore Our Partner Resorts</h1>
+  <p>Browse active resorts in Pansol, Laguna and pick the one that fits your stay</p>
+</div>
+<div class="filter-bar">
+  <div class="search-input">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input id="resortSearch" type="text" placeholder="Search resorts by name or location..." aria-label="Search resorts">
+  </div>
+</div>
+<div class="results-info" id="resultsInfo">Showing {{ resorts|length }} active resort{{ '' if resorts|length == 1 else 's' }}</div>
+<div class="resort-grid">
+  {% for resort in resorts %}
+  <article class="resort-card" data-search="{{ (resort.resort_name ~ ' ' ~ (resort.address or '') ~ ' ' ~ (resort.amenities or ''))|lower }}">
+    <div class="card-img">
+      <img src="{{ resort.logo or url_for('static', filename='images/default-resort.svg') }}" alt="{{ resort.resort_name }}">
+    </div>
+    <div class="card-body">
+      <h3>{{ resort.resort_name }}</h3>
+      <p class="location"><i class="fa-solid fa-location-dot"></i> {{ resort.address or 'Location not provided' }}</p>
+      {% if resort.description %}<p class="description">{{ resort.description }}</p>{% endif %}
+      <div class="tags">
+        {% if resort.amenities %}<span class="tag">{{ resort.amenities }}</span>{% endif %}
+        {% if resort.max_pax %}<span class="tag">Up to {{ resort.max_pax }} guests</span>{% endif %}
+      </div>
+      {% include 'customer/_resort_rates.html' %}
+<div class="card-footer">
+        <div class="price">{% if resort.price is not none %}From <b>₱{{ "{:,.2f}".format(resort.price) }}</b>{% else %}Contact resort for pricing{% endif %}</div>
+        <a class="btn-select" href="{{ url_for('registration') }}">Select</a>
+      </div>
+    </div>
+  </article>
+  {% else %}
+  <p class="empty-state">No active resorts are available right now.</p>
+  {% endfor %}
+</div>
+<script>
+const search = document.getElementById('resortSearch');
+search.addEventListener('input', () => {
+  const query = search.value.trim().toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('.resort-card').forEach(card => {
+    const match = card.dataset.search.includes(query);
+    card.hidden = !match;
+    if (match) visible++;
+  });
+  document.getElementById('resultsInfo').textContent = `Showing ${visible} active resort${visible === 1 ? '' : 's'}`;
+});
+</script>
+
+<script src="{{ url_for('static', filename='js/responsive_navigation.js') }}" defer></script>
+
+</body>
+</html>
