@@ -1,100 +1,202 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Pansol Resorts — Reports</title>
+
 <link rel="stylesheet" href="{{url_for('static', filename='css/admin_style/admin.css')}}">
 
+
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
+
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+
 <script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reservation_tools.css') }}?v=20261109">
+<script src="{{ url_for('static', filename='js/reservation_tools.js') }}?v=20261109" defer></script>
 </head>
+
 <body class="owner-ui">
 
+
+
 <!--
+
   NOTES FOR THIS PAGE (reports.html)
+
   --------------------------------------------------
+
   Shared by BOTH sidebar 'Reports' and top nav 'Reports' —
+
   both are marked active on this one file.
-  Export buttons are placeholders (CSV/PDF generation is backend work).
+
+  PDF exports use the selected month and resort filters.
+
+
 
   All pages share styles.css — do not fork styles per page.
+
   Sidebar / top nav links are plain <a href="..."> pointing at
+
   the sibling .html files, so this works as static prototype
+
   files opened directly in a browser, or dropped into a real
+
   app's templates folder later.
+
 -->
+
+
 
 <div class="app">
 
+
+
   <!-- SIDEBAR -->
+
   {% include 'admin/_sidebar.html' %}
 
+
+
   <!-- MAIN -->
+
   <div class="main">
+
     {% include 'admin/_header.html' %}
 
+
+
     <div class="content">
+
       <h1 class="page-title">Reports</h1>
+
       <p class="page-sub">Performance summaries across your resorts</p>
 
+
+
       <form class="toolbar" method="get" action="{{ url_for('reports') }}">
+
         <label for="reportMonth">Month</label>
+
         <input class="search-input" id="reportMonth" name="month" type="month" value="{{ selected_month }}">
+
         <label for="reportResort">Resort</label>
+
         <select class="select-input" id="reportResort" name="resort_id">
+
           <option value="">All resorts</option>
+
           {% for resort in report_resorts %}
+
           <option value="{{ resort.resort_id }}" {{ 'selected' if selected_resort == resort.resort_id else '' }}>{{ resort.resort_name }}</option>
+
           {% endfor %}
+
         </select>
+
         <button class="btn btn-primary" type="submit">Apply Filters</button>
+
         <a class="btn btn-outline" href="{{ url_for('reports') }}">Current Month</a>
+
       </form>
 
+
+
       <div class="grid-4" style="margin-bottom:22px;">
+
         <div class="stat-card"><div class="stat-label">Total Bookings</div><div class="stat-value">{{ total_bookings }}</div><div class="stat-sub">This month</div></div>
+
         <div class="stat-card"><div class="stat-label">Occupancy Rate</div><div class="stat-value">{{ occupancy_rate }}%</div><div class="stat-sub">Across {{ total_resorts }} resorts</div></div>
+
         <div class="stat-card"><div class="stat-label">Revenue</div><div class="stat-value">&#8369;{{ "%.2f"|format(revenue) }}</div><div class="stat-sub">This month</div></div>
+
         <div class="stat-card"><div class="stat-label">Avg. Rating</div><div class="stat-value">{{ "%.1f"|format(average_rating) }}</div><div class="stat-sub">{{ total_reviews }} reviews</div></div>
+
       </div>
 
+
+
       <div class="grid-2">
+
         <div class="card">
+
           <h3>Revenue by Resort</h3>
+
           <table>
+
             <thead><tr><th>Resort</th><th>Bookings</th><th>Revenue</th></tr></thead>
+
             <tbody>
+
               {% for resort in revenue_by_resort %}
+
               <tr><td>{{ resort.resort_name }}</td><td>{{ resort.bookings }}</td><td>&#8369;{{ "%.2f"|format(resort.revenue) }}</td></tr>
+
               {% else %}
+
               <tr class="empty-row"><td colspan="3">No report data yet.</td></tr>
+
               {% endfor %}
+
             </tbody>
+
           </table>
+
         </div>
+
         <div class="card">
+
           <h3>Export Options</h3>
+
           <p style="font-size:13.5px; color:var(--muted); margin-top:0;">Download a report for your records or accounting.</p>
+
           <div class="action-group">
+
             <button class="btn btn-outline btn-sm">Export CSV</button>
-            <button class="btn btn-outline btn-sm">Export PDF</button>
-            <button class="btn btn-primary btn-sm">Generate Monthly Report</button>
+
+            <a class="btn btn-outline btn-sm" href="{{ url_for('reports_pdf', month=selected_month, resort_id=selected_resort or '') }}">Download PDF</a>
+
+            <a class="btn btn-primary btn-sm" href="{{ url_for('reports_pdf', month=selected_month, resort_id=selected_resort or '') }}">Print monthly PDF</a>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
 
 
 
+
+
+
+
 {% include 'admin/_owner_navigation.html' %}
+
 </body>
+
 </html>
+

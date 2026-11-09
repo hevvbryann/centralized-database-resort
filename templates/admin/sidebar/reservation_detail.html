@@ -1,79 +1,160 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Reservation review</title>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_style/admin.css') }}">
 
+
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_experience.css') }}">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/design_system.css') }}">
+
 <script src="{{ url_for('static', filename='js/design_system.js') }}" data-resort-fallback="{{ url_for('static', filename='images/default-resort.svg') }}" defer></script>
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/owner_ui.css') }}">
+
 <script src="{{ url_for('static', filename='js/owner_ui.js') }}" defer></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile_performance.css') }}?v=20261107-mobile">
+
 <script src="{{ url_for('static', filename='js/mobile_performance.js') }}?v=20261107-mobile" defer></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reservation_tools.css') }}?v=20261109">
+<script src="{{ url_for('static', filename='js/reservation_tools.js') }}?v=20261109" defer></script>
 </head>
+
 <body class="owner-ui">
+
   <div class="app">
+
     {% include 'admin/_sidebar.html' %}
+
     <div class="main">
+
       <div class="content">
+
         <a class="btn btn-outline btn-sm" href="{{ url_for('reservation') }}">&larr; Back to reservations</a>
+
         <h1 class="page-title" style="margin-top:20px;">Reservation #RSV-{{ reservation.reservation_id }}</h1>
+
         {% with messages = get_flashed_messages(with_categories=true) %}
+
           {% for category, message in messages %}<p class="page-sub">{{ message }}</p>{% endfor %}
+
         {% endwith %}
+
         <div class="card" style="margin-top:20px; padding:24px;">
+
           <p><strong>Guest:</strong> {{ reservation.guest_name }}</p>
+
           <p><strong>Booking source:</strong> {{ reservation.booking_source }}</p>
+
           <p><strong>Email:</strong> {{ reservation.guest_email or 'Not provided' }}</p>
+
           <p><strong>Phone:</strong> {{ reservation.guest_phone or 'Not provided' }}</p>
+
           <p><strong>Resort:</strong> {{ reservation.resort_name }}</p>
+
           <p><strong>Stay:</strong> {{ reservation.check_in }} to {{ reservation.check_out }} ({{ reservation.guests }} guests)</p>
+
           <p><strong>Total:</strong> &#8369;{{ "%.2f"|format(reservation.total_amount) }}</p>
+
           <p><strong>Reservation status:</strong> {{ reservation.reservation_status }}</p>
+
           <p><strong>Customer decision:</strong> {{ reservation.customer_decision or 'Pending' }}</p>
+
           <p><strong>Payment status:</strong> {{ reservation.payment_status or 'No payment submitted' }}</p>
+
           <p><strong>Payment sender:</strong> {{ reservation.payer_name or 'Not provided' }}</p>
+
           <p><strong>Sender phone:</strong> {{ reservation.payer_phone or 'Not provided' }}</p>
-          <p><strong>Transaction reference:</strong> {{ reservation.reference_number or 'Not provided' }}</p>
+
+          <p><strong>Transaction reference:</strong> {{ reservation.reference_number or 'Not provided' }} {% if reservation.reference_number %}<button type="button" data-copy-reference="{{ reservation.reference_number }}" aria-label="Copy reference number">Copy</button>{% endif %}</p>
+
           <p><strong>Payment method:</strong> {{ reservation.payment_method or 'Not provided' }}</p>
+
           <hr style="margin:22px 0; border:0; border-top:1px solid #ddd;">
+
           <h3>Payment proof</h3>
+
           {% if reservation.proof_of_payment %}
+
             <p><img src="{{ reservation.proof_url }}" alt="Payment proof" style="max-width:100%; max-height:560px; border:1px solid #ddd; border-radius:8px;" decoding="async" loading="lazy"></p>
+
             <a class="btn btn-outline btn-sm" target="_blank" rel="noopener" href="{{ reservation.proof_url }}">Open full image</a>
+
           {% else %}
+
             <p class="page-sub">The customer has not submitted a payment screenshot.</p>
+
           {% endif %}
+
           {% if reservation.booking_source == 'Walk-in' and reservation.reservation_status == 'Pending' %}
+
             <a class="btn btn-primary" href="{{ url_for('admin_walkins') }}" style="margin-top:20px;">Review in Walk-in Approvals</a>
+
           {% elif reservation.booking_source == 'Online' and reservation.reservation_status == 'Pending' %}
+
             <form action="{{ url_for('review_reservation', reservation_id=reservation.reservation_id) }}" method="post" style="display:inline-block; margin-top:20px;">
+
               {% if reservation.customer_decision == 'Continue' and reservation.payment_status == 'Pending' %}
+
                 <button class="btn btn-primary" name="action" value="approve" type="submit">Approve &amp; verify payment</button>
+
               {% else %}
+
                 <p class="page-sub">
+
                   {% if reservation.customer_decision != 'Continue' %}Waiting for the customer to confirm they want to continue.
+
                   {% elif not reservation.payment_status %}Waiting for payment proof.
+
                   {% else %}The payment is not awaiting review.{% endif %}
+
                 </p>
+
               {% endif %}
+
               {% if not reservation.payment_status or reservation.payment_status == 'Pending' %}
+
                 <button class="btn btn-outline" name="action" value="reject" type="submit" style="margin-left:8px;">Reject</button>
+
               {% else %}
+
                 <p class="page-sub">This payment is already finalized and cannot be changed here.</p>
+
               {% endif %}
+
             </form>
+
           {% endif %}
+
         </div>
+
       </div>
+
     </div>
+
   </div>
 
 
+
+
+
 {% include 'admin/_owner_navigation.html' %}
+
 </body>
+
 </html>
+

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Support Chat | Pansol Resorts</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/support_chat.css') }}">
+<script src="{{ url_for('static',filename='js/support_chat.js') }}" defer></script><link rel="stylesheet" href="{{ url_for('static', filename='css/reservation_tools.css') }}?v=20261109">
+<script src="{{ url_for('static', filename='js/reservation_tools.js') }}?v=20261109" defer></script>
+</head>
+<body><header><a href="{{ dashboard_url }}" class="brand"><img src="{{ url_for('static',filename='images/logo.png') }}" alt="Pansol Resorts"></a><a href="{{ dashboard_url }}">Back to dashboard</a></header>
+<main><div class="heading"><p>RESORT CUSTOMER CARE</p><h1>Support chat</h1><p>Customers, resort owners and assigned caretakers can follow the same resort conversation.</p></div>
+<div class="chat-layout"><aside><h2>{{ 'Choose a resort' if chat_role=='customer' else 'Conversations' }}</h2>
+{% if chat_role=='customer' %}<nav>{% for resort in resorts %}<a class="thread-link {{ 'active' if selected_resort and selected_resort.resort_id==resort.resort_id else '' }}" href="{{ url_for('customer_support',resort_id=resort.resort_id) }}">{{ resort.resort_name }}</a>{% else %}<p>No resort support teams are available.</p>{% endfor %}</nav>
+{% else %}<nav id="chat-inbox">{% for thread in threads %}<a class="thread-link" href="{{ thread.url }}"><strong>{{ thread.customer_name }}</strong><small>{{ thread.resort_name }}</small><span>{{ thread.message|truncate(90) }}</span>{% if thread.unread_count %}<b>{{ thread.unread_count }} unread</b>{% endif %}</a>{% else %}<p>No customer inquiries yet.</p>{% endfor %}</nav>{% endif %}</aside>
+<section class="conversation" aria-label="Support conversation">
+{% if selected_resort %}<div class="conversation-heading"><h2>{{ selected_resort.resort_name }}</h2><p>{{ customer.fullname if customer else 'Resort support team' }}</p></div>
+<div id="chat-messages" role="log" aria-label="Conversation messages" aria-live="polite" aria-relevant="additions" tabindex="0">{% for message in messages %}<article class="bubble {{ 'mine' if message.mine else '' }}" data-message-id="{{ message.support_message_id }}"><strong>{{ message.sender_name }} · {{ message.sender_role|title }}</strong><p>{{ message.message }}</p><time>{{ message.sent_at }}</time></article>{% else %}<p class="chat-empty">No messages yet. Ask a question to start the conversation.</p>{% endfor %}</div>
+<form method="post" id="chat-compose"><input type="hidden" name="csrf_token" value="{{ session.support_csrf }}">{% if chat_role=='customer' %}<input type="hidden" name="resort_id" value="{{ selected_resort.resort_id }}">{% endif %}<label for="chat-message">Your message</label><textarea id="chat-message" name="message" maxlength="2000" rows="3" required placeholder="Write your question or reply…"></textarea><div class="compose-footer"><small>Up to 2,000 characters · Latest 200 messages shown</small><button type="submit">Send message</button></div></form>
+{% else %}<div class="chat-empty"><h2>How can we help?</h2><p>Select a resort or conversation to read and send messages.</p></div>{% endif %}
+<p id="chat-status" role="status">New messages update automatically while this page is open.</p></section></div></main></body></html>
